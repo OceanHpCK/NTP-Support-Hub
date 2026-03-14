@@ -62,7 +62,7 @@ export default function App() {
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
             <a
-              href="/Tai_lieu_tham_khao_HDPE.md"
+              href="/docs/Tai_lieu_tham_khao_HDPE.md"
               download="Tai_lieu_tham_khao_HDPE.md"
               className="flex items-center justify-center gap-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-5 py-2.5 rounded-xl font-medium transition-colors shadow-sm"
             >
