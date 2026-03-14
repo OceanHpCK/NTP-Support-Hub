@@ -22,13 +22,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Lowercase repository owner
+        run: |
+          echo "REPO_OWNER=${GITHUB_REPOSITORY_OWNER,,}" >> $GITHUB_ENV
+
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/ntp-support-hub:latest
-            ghcr.io/${{ github.repository_owner }}/ntp-support-hub:${{ github.sha }}
+            ghcr.io/${{ env.REPO_OWNER }}/ntp-support-hub:latest
+            ghcr.io/${{ env.REPO_OWNER }}/ntp-support-hub:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
