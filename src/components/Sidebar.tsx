@@ -20,17 +20,17 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
   const location = useLocation();
 
   return (
-    <div className="h-full bg-slate-900 text-white flex flex-col shadow-2xl">
+    <div className="h-full bg-[#004d2c] text-white flex flex-col shadow-2xl">
       {/* Brand */}
       <div className="p-5 border-b border-slate-800">
         <div className="flex items-center justify-between">
           <NavLink to="/" className="flex items-center gap-3 group" onClick={onClose}>
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:shadow-blue-500/40 transition-shadow">
-              <span className="text-white font-black text-lg">N</span>
+            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-green-500/10 transition-shadow overflow-hidden p-1">
+              <img src="/logo.png" alt="NTP Logo" className="w-full h-full object-contain" />
             </div>
             <div>
-              <h1 className="font-bold text-lg leading-tight tracking-tight">NTP Hub</h1>
-              <p className="text-[10px] text-slate-400 font-medium uppercase tracking-widest">Hỗ trợ Kỹ thuật</p>
+              <h1 className="font-bold text-lg leading-tight tracking-tight text-white">NTP Hub</h1>
+              <p className="text-[10px] text-emerald-200 font-medium uppercase tracking-widest">Hỗ trợ Kỹ thuật</p>
             </div>
           </NavLink>
           <button
@@ -52,8 +52,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
           className={({ isActive }) =>
             `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
               isActive
-                ? 'bg-slate-800 text-white shadow-lg'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                ? 'bg-emerald-800/80 text-white shadow-lg border border-emerald-700'
+                : 'text-emerald-100/70 hover:text-white hover:bg-emerald-800/40'
             }`
           }
         >
@@ -78,8 +78,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
               onClick={onClose}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 group ${
                 isActive
-                  ? 'bg-slate-800 text-white shadow-lg'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                  ? 'bg-emerald-800/80 text-white shadow-lg border border-emerald-700'
+                  : 'text-emerald-100/70 hover:text-white hover:bg-emerald-800/40'
               }`}
             >
               <div
