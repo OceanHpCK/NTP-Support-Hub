@@ -16,7 +16,7 @@ export interface AppModule {
   name: string;
   shortName: string;
   description: string;
-  icon: 'drill' | 'pipe' | 'flame' | 'calculator' | 'wrench' | 'cpu';
+  icon: 'drill' | 'pipe' | 'flame' | 'calculator' | 'wrench' | 'cpu' | 'anchor';
   color: string;       // Tailwind color class prefix, e.g. 'green', 'blue', 'cyan'
   colorHex: string;    // Hex for gradient/dynamic use
   path: string;        // Route path (no leading /)
@@ -56,6 +56,17 @@ const APP_REGISTRY: AppModule[] = [
     colorHex: '#0891b2',
     path: 'polyweld',
     component: React.lazy(() => import('./apps/polyweld/App')),
+  },
+  {
+    id: 'hdpe-sinking',
+    name: 'HDPE Sinking Calculator',
+    shortName: 'HDPE Sinking',
+    description: 'Tính toán và xuất báo cáo các thông số đánh chìm ống HDPE qua biển, sông.',
+    icon: 'anchor',
+    color: 'sky',
+    colorHex: '#0ea5e9',
+    path: 'hdpe-sinking',
+    component: React.lazy(() => import('./apps/hdpe-sinking/App')),
   },
 ];
 
