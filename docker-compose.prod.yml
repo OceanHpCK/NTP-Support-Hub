@@ -1,0 +1,10 @@
+services:
+  ntp-support-hub:
+    image: ghcr.io/oceanhpck/ntp-support-hub:latest
+    container_name: ntp-support-hub-prod
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    # Environment variables for production
+    environment:
+      - VITE_GEMINI_API_KEY=${VITE_GEMINI_API_KEY}
