@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  ntp-support-hub:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ntp-support-hub
+    ports:
+      - "8080:80"
+    restart: unless-stopped
