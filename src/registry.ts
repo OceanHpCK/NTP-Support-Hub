@@ -68,6 +68,28 @@ const APP_REGISTRY: AppModule[] = [
     path: 'hdpe-sinking',
     component: React.lazy(() => import('./apps/hdpe-sinking/App')),
   },
+  {
+    id: 'cement-calculator',
+    name: 'Tiền Phong Cement Calculator',
+    shortName: 'Keo dán',
+    description: 'Tính toán lượng keo dán ống Nhựa Tiền Phong dựa trên định mức tiêu chuẩn.',
+    icon: 'calculator',
+    color: 'emerald',
+    colorHex: '#10b981',
+    path: 'cement-calculator',
+    component: React.lazy(() => import('./apps/cement-calculator/App')),
+  },
+  {
+    id: 'heat-loss-calculator',
+    name: 'Tính toán tổn thất nhiệt',
+    shortName: 'Tổn thất nhiệt',
+    description: 'Tính toán tổn thất nhiệt cho đường ống nhựa HDPE & PP-R có/không bảo ôn.',
+    icon: 'wrench',
+    color: 'blue',
+    colorHex: '#3b82f6',
+    path: 'heat-loss-calculator',
+    component: React.lazy(() => import('./apps/heat-loss-calculator/App')),
+  },
 ];
 
 export default APP_REGISTRY;
