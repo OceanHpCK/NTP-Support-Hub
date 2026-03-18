@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Calculator, Settings, Ruler, Mountain, Truck, Activity, CheckCircle2, XCircle, Info, Droplets, Table as TableIcon, X } from 'lucide-react';
+import { Calculator, Settings, Ruler, Mountain, Truck, Activity, CheckCircle2, XCircle, Info, Droplets, Table as TableIcon, X, AlertTriangle } from 'lucide-react';
 
 const MATERIALS = {
   'HDPE (PE 100)': { E: 950, type: 'flexible', maxDeflection: 7.5, systems: ['water_supply', 'drainage'] },
@@ -102,7 +102,8 @@ export default function App() {
     snType: 'SN8',
     snValue: 8,
     thicknessInputType: 'e',
-    sdr: 17
+    sdr: 17,
+    Pi: 0 // Internal pressure in bar
   });
 
   useEffect(() => {
@@ -125,6 +126,11 @@ export default function App() {
     setParams(p => {
       const isStringField = ['systemType', 'material', 'traffic', 'beddingAngle', 'corrugatedMaterial', 'snType', 'thicknessInputType'].includes(name);
       const newParams = { ...p, [name]: isStringField ? value : parseFloat(value) || 0 };
+      
+      if (name === 'systemType' && value === 'drainage') {
+        newParams.Pi = 0;
+      }
+      
       if (name === 'corrugatedMaterial') {
         newParams.snType = 'SN8';
         newParams.snValue = 8;
@@ -136,7 +142,7 @@ export default function App() {
   };
 
   const results = useMemo(() => {
-    const { De, e, E, H, B, beddingAngle, gamma, Eprime, hw, traffic, material, thicknessInputType, sdr, snValue } = params;
+    const { De, e, E, H, B, beddingAngle, gamma, Eprime, hw, traffic, material, thicknessInputType, sdr, snValue, Pi } = params;
     const actual_e = (['HDPE (PE 100)', 'PVC-U'].includes(material) && thicknessInputType === 'SDR') ? De / sdr : e;
     const Dm = material === 'Ống gân sóng (Corrugated)' ? De : Math.max(0.1, De - actual_e);
     const r = Dm / 2;
@@ -145,6 +151,8 @@ export default function App() {
     const Pt = getTrafficLoad(traffic, Heff);
     const Pv = Ps + Pt;
     const Pv_MPa = Pv / 1000;
+    const Pi_MPa = (Pi || 0) * 0.1; // 1 bar = 0.1 MPa
+
     let EI;
     if (material === 'Ống gân sóng (Corrugated)') {
       EI = (snValue / 1000) * Math.pow(Dm, 3);
@@ -154,7 +162,8 @@ export default function App() {
     }
     const Dl = 1.5;
     const K = BEDDING_CONSTANTS[beddingAngle as keyof typeof BEDDING_CONSTANTS];
-    const delta_x = (Dl * K * Pv_MPa * Math.pow(r, 3)) / (EI + 0.061 * Eprime * Math.pow(r, 3));
+    // Rerounding effect: 0.187 * Pi * r^3
+    const delta_x = (Dl * K * Pv_MPa * Math.pow(r, 3)) / (EI + 0.061 * Eprime * Math.pow(r, 3) + 0.187 * Pi_MPa * Math.pow(r, 3));
     const deflectionPercent = (delta_x / Dm) * 100;
     const hw_eff = Math.min(hw, H);
     const Rw = 1 - 0.33 * (hw_eff / Heff);
@@ -165,7 +174,7 @@ export default function App() {
     const hoopStress = (Pv * Dm) / (2 * actual_e * 1000);
     const maxDef = MATERIALS[params.material as keyof typeof MATERIALS].maxDeflection;
     const isDeflectionPass = deflectionPercent <= maxDef;
-    const isBucklingPass = FS_buckling >= 2.5;
+    const isBucklingPass = FS_buckling >= 2.0;
     return {
       Ps, Pt, Pv, delta_x, deflectionPercent, Pcr, FS_buckling, hoopStress, isDeflectionPass, isBucklingPass, maxDef
     };
@@ -336,6 +345,14 @@ export default function App() {
                     <InputField label="Chiều sâu chôn ống (H)" name="H" value={params.H} onChange={handleInputChange} unit="m" />
                     <InputField label="Bề rộng rãnh (B)" name="B" value={params.B} onChange={handleInputChange} unit="m" />
                   </div>
+                  {params.H < 0.6 && (
+                    <div className="flex gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                      <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                      <p className="text-[10px] text-amber-700 leading-tight">
+                        Cảnh báo: Chiều sâu chôn ống tối thiểu theo BS EN 1295-1 nên là 0.6m.
+                      </p>
+                    </div>
+                  )}
                   <SelectField label="Góc ôm của lớp lót (Bedding Angle)" name="beddingAngle" value={params.beddingAngle} onChange={handleInputChange}
                     options={[
                       { label: '0° (Không lót)', value: '0' },
@@ -357,7 +374,12 @@ export default function App() {
                 <div className="space-y-4">
                   <InputField label="Trọng lượng riêng đất (γ)" name="gamma" value={params.gamma} onChange={handleInputChange} unit="kN/m³" />
                   <InputField label="Mô đun phản lực đất (E')" name="Eprime" value={params.Eprime} onChange={handleInputChange} unit="MPa" />
-                  <InputField label="Mực nước ngầm trên đáy ống (hw)" name="hw" value={params.hw} onChange={handleInputChange} unit="m" />
+                  <div className="grid grid-cols-2 gap-4">
+                    <InputField label="Mực nước ngầm (hw)" name="hw" value={params.hw} onChange={handleInputChange} unit="m" />
+                    {params.systemType === 'water_supply' && (
+                      <InputField label="Áp suất vận hành (Pi)" name="Pi" value={params.Pi} onChange={handleInputChange} unit="bar" />
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -460,7 +482,7 @@ export default function App() {
                         )}
                       </div>
                     </div>
-                    <div className="text-[10px] text-slate-500 text-right font-medium uppercase tracking-wider">Yêu cầu FS ≥ 2.5</div>
+                    <div className="text-[10px] text-slate-500 text-right font-medium uppercase tracking-wider">Yêu cầu FS ≥ 2.0</div>
                   </div>
                 </div>
                 <div className="pt-4 border-t border-slate-800">

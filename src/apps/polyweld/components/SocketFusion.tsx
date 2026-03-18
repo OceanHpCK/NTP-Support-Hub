@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Ruler, Clock, Thermometer, AlertTriangle, CheckCircle } from 'lucide-react';
+import { Ruler, Clock, Thermometer, AlertTriangle, CheckCircle, ArrowLeft } from 'lucide-react';
 import { SocketFusionData } from '../types';
 
 // Standard data reference (approximate DVS 2207-11 / Manufacturer standards)
@@ -47,7 +47,7 @@ const SocketFusion: React.FC = () => {
 
         <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 flex flex-col items-center justify-center text-center">
-            <Thermometer className="w-8 h-8 text-red-500 mb-2" />
+            <Clock className="w-8 h-8 text-red-500 mb-2" />
             <span className="text-slate-500 text-sm">Thời gian gia nhiệt</span>
             <span className="text-3xl font-bold text-slate-800">{currentData.heatingTime} <span className="text-lg font-normal">giây</span></span>
           </div>
@@ -65,6 +65,12 @@ const SocketFusion: React.FC = () => {
             <Ruler className="w-8 h-8 text-emerald-500 mb-2" />
             <span className="text-slate-500 text-sm">Chiều sâu lồng ống</span>
             <span className="text-3xl font-bold text-slate-800">{currentData.insertionDepth} <span className="text-lg font-normal">mm</span></span>
+          </div>
+          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 flex flex-col items-center justify-center text-center lg:col-span-4">
+            <Thermometer className="w-8 h-8 text-blue-600 mb-2" />
+            <span className="text-slate-500 text-sm">Nhiệt độ hàn khuyến nghị</span>
+            <span className="text-2xl font-bold text-blue-800">200 - 230 °C</span>
+            <span className="text-xs text-blue-600 font-medium mt-1">Tối ưu: 210 - 220 °C (Đối với PPR: 260 °C)</span>
           </div>
         </div>
       </div>
@@ -90,7 +96,7 @@ const SocketFusion: React.FC = () => {
             </li>
             <li className="flex gap-2">
               <span className="font-bold text-blue-600">4.</span>
-              Kiểm tra nhiệt độ máy hàn (thường là 260°C ± 10°C cho PPR).
+              Kiểm tra nhiệt độ máy hàn (Thường là 260°C cho PPR; 200-230°C cho HDPE/các loại khác).
             </li>
           </ul>
         </div>

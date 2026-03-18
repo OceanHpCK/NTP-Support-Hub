@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Calculator, Settings, Info, Activity } from 'lucide-react';
+import { Calculator, Settings, Info, Activity, Thermometer, ArrowLeft } from 'lucide-react';
 import { ButtFusionParams, ButtFusionResult } from '../types';
 import { 
   XAxis, 
@@ -441,6 +441,13 @@ const ButtFusion: React.FC = () => {
                     <p className="text-slate-400 text-xs uppercase tracking-wider">t<sub>5</sub> (Làm nguội)</p>
                     <p className="text-3xl font-bold text-emerald-400">{result.coolingTime}</p>
                     <p className="text-xs text-slate-500">phút</p>
+                  </div>
+                  <div className="space-y-1 bg-blue-900/30 p-3 rounded-lg border border-blue-500/20">
+                    <p className="text-blue-300 text-xs uppercase tracking-wider flex items-center gap-1">
+                      <Thermometer size={12} /> Nhiệt độ hàn
+                    </p>
+                    <p className="text-2xl font-bold text-white">200 - 230 °C</p>
+                    <p className="text-[10px] text-blue-200/70">Tối ưu: 210 - 220 °C</p>
                   </div>
                </div>
             </div>
