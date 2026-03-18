@@ -40,7 +40,7 @@ npm run dev
 
 ## 🌐 Deployment Production
 
-Cấu hình cho tên miền chính thức: `https://hotrokythua.nhuatienphong.io.vn/`
+Cấu hình cho tên miền chính thức: `https://hotrokythuat.nhuatienphong.io.vn/`
 
 Sử dụng Docker Compose trong môi trường production để đảm bảo tính ổn định và bảo mật.
 
