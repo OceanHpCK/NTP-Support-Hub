@@ -85,6 +85,7 @@ const SelectField = ({ label, name, value, onChange, options }: any) => (
 
 export default function App() {
   const [showTables, setShowTables] = useState(false);
+  const [showMethodology, setShowMethodology] = useState(false);
   const [params, setParams] = useState({
     systemType: 'water_supply',
     material: 'HDPE (PE 100)',
@@ -423,11 +424,17 @@ export default function App() {
           {/* Results Column */}
           <div className="lg:col-span-4">
             <div className="bg-slate-900 rounded-2xl shadow-xl text-white sticky top-4 overflow-hidden border border-slate-800">
-              <div className="p-6 border-b border-slate-800 bg-slate-800/50">
+              <div className="p-6 border-b border-slate-800 bg-slate-800/50 flex justify-between items-center">
                 <h2 className="text-lg font-semibold flex items-center gap-2">
                   <Activity className="w-5 h-5 text-blue-400" />
                   Kết quả phân tích
                 </h2>
+                <button 
+                  onClick={() => setShowMethodology(true)}
+                  className="text-[10px] bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-1 rounded hover:bg-blue-500/20 transition-all flex items-center gap-1 uppercase tracking-wider font-bold"
+                >
+                  <Info size={12} /> Cơ sở
+                </button>
               </div>
               <div className="p-6 space-y-8">
                 <div>
@@ -539,6 +546,114 @@ export default function App() {
           </div>
         </div>
       </main>
+
+      {/* Methodology Modal */}
+      {showMethodology && (
+        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col border border-slate-200">
+            <div className="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+              <div className="flex items-center gap-2">
+                <Info className="w-5 h-5 text-blue-600" />
+                <h3 className="font-bold text-slate-800 uppercase tracking-wide">Cơ sở tính toán (Methodology)</h3>
+              </div>
+              <button 
+                onClick={() => setShowMethodology(false)}
+                className="p-1 hover:bg-slate-200 rounded-full transition-colors"
+              >
+                <X className="w-5 h-5 text-slate-500" />
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto space-y-8">
+              {params.systemType === 'water_supply' ? (
+                <div className="space-y-6">
+                  <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 shadow-sm">
+                    <h4 className="font-bold text-blue-800 mb-2 flex items-center gap-2">
+                      <Droplets size={16} /> Hệ thống cấp nước (Water Supply)
+                    </h4>
+                    <p className="text-sm text-blue-700 leading-relaxed italic">
+                      Tính toán theo BS EN 1295-1, tập trung vào ảnh hưởng của áp suất bên trong lên độ võng (Rerounding) và phân tích ứng suất kết hợp.
+                    </p>
+                  </div>
+
+                  <section className="space-y-3">
+                    <h5 className="font-bold text-slate-800 border-l-4 border-blue-500 pl-2">1. Hiệu ứng Rerounding (Chống biến dạng)</h5>
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      Khi có áp suất bên trong ($P_i$), ống có xu hướng tròn lại, tạo ra một lực kháng cản sự biến dạng do tải trọng ngoài. 
+                      Thuật toán thêm số hạng sau vào mẫu số của công trình Spangler:
+                    </p>
+                    <div className="bg-slate-50 p-4 rounded-lg font-mono text-xs text-center border border-slate-100 shadow-inner">
+                      Rerounding Factor = 0.187 &times; P_i &times; r&sup3;
+                    </div>
+                    <p className="text-xs text-slate-500 italic">Trong đó r là bán kính trung bình của ống.</p>
+                  </section>
+
+                  <section className="space-y-3">
+                    <h5 className="font-bold text-slate-800 border-l-4 border-blue-500 pl-2">2. Mực nước ngầm (Groundwater) & Lực đẩy nổi</h5>
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      Lực đẩy nổi ($P_w$) làm giảm áp lực đất lên ống nhưng lại tăng nguy cơ oằn. Giá trị $h_w$ được tính từ mực nước ngầm đến đáy rãnh.
+                    </p>
+                  </section>
+
+                  <section className="space-y-3">
+                    <h5 className="font-bold text-slate-800 border-l-4 border-blue-500 pl-2">3. Ứng suất kết hợp (Combined Stress)</h5>
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      Ứng suất tổng được tính bằng tổng của ứng suất vòng (do áp lực nước) và ứng suất uốn (do biến dạng đất):
+                    </p>
+                    <div className="bg-slate-50 p-4 rounded-lg space-y-2 border border-slate-100 shadow-inner">
+                      <div className="font-mono text-xs text-center">&sigma;_h (Hoop) = (P_i &times; Dm) / (2 &times; e)</div>
+                      <div className="font-mono text-xs text-center font-bold">&sigma;_total = &sigma;_h + &sigma;_b (Bending)</div>
+                    </div>
+                    <p className="text-[11px] text-slate-500">
+                      * Yêu cầu: &sigma;_total &le; &sigma;_d (Ứng suất thiết kế của vật liệu).
+                    </p>
+                  </section>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-100 shadow-sm">
+                    <h4 className="font-bold text-emerald-800 mb-2 flex items-center gap-2">
+                      <Mountain size={16} /> Hệ thống thoát nước (Drainage)
+                    </h4>
+                    <p className="text-sm text-emerald-700 leading-relaxed italic">
+                      Tập trung vào kiểm tra độ võng tiêu chuẩn (không áp) và độ ổn định thành ống (Buckling).
+                    </p>
+                  </div>
+
+                  <section className="space-y-3">
+                    <h5 className="font-bold text-slate-800 border-l-4 border-emerald-500 pl-2">1. Độ võng (Deflection)</h5>
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      Tính theo công thức Spangler truyền thống, không xét Rerounding vì hệ thống không áp hoặc áp suất thấp.
+                    </p>
+                    <div className="bg-slate-50 p-4 rounded-lg font-mono text-xs text-center border border-slate-100 shadow-inner">
+                      &Delta;x = (K &times; W &times; r&sup3; &times; D_L) / (E&middot;I + 0.061 &times; E' &times; r&sup3;)
+                    </div>
+                  </section>
+
+                  <section className="space-y-3">
+                    <h5 className="font-bold text-slate-800 border-l-4 border-emerald-500 pl-2">2. Kiểm tra oằn (Buckling Resistance)</h5>
+                    <p className="text-sm text-slate-600 leading-relaxed">
+                      Đây là yếu tố quan trọng nhất đối với ống mềm thoát nước. Hệ số an toàn (FS) được tính giữa áp suất oằn tới hạn (Pcr) và tải trọng tác dụng.
+                    </p>
+                    <div className="bg-slate-50 p-4 rounded-lg font-mono text-xs text-center border border-slate-100 shadow-inner">
+                      Pcr = 1.15 &times; &radic;(8 &times; S &times; E')
+                    </div>
+                    <p className="text-[11px] text-slate-500">
+                      * Yêu cầu: FS (Pcr / P_total) &ge; 2.0 theo cập nhật mới nhất.
+                    </p>
+                  </section>
+                </div>
+              )}
+            </div>
+
+            <div className="p-4 bg-slate-50 border-t border-slate-100 text-center">
+              <p className="text-[10px] text-slate-400 font-medium uppercase tracking-widest">
+                Căn cứ: BS EN 1295-1 | Spangler | Marston
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

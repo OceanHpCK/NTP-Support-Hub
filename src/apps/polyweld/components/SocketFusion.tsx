@@ -70,7 +70,7 @@ const SocketFusion: React.FC = () => {
             <Thermometer className="w-8 h-8 text-blue-600 mb-2" />
             <span className="text-slate-500 text-sm">Nhiệt độ hàn khuyến nghị</span>
             <span className="text-2xl font-bold text-blue-800">250 - 270 °C</span>
-            <span className="text-xs text-blue-600 font-medium mt-1">Tối ưu: 255 - 260 °C (Áp dụng cho cả PPR & HDPE)</span>
+            <span className="text-xs text-blue-600 font-medium mt-1">Nhiệt độ tối ưu: 255 - 260 °C</span>
           </div>
         </div>
       </div>
