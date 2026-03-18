@@ -67,7 +67,6 @@ const SocketFusion: React.FC = () => {
             <span className="text-3xl font-bold text-slate-800">{currentData.insertionDepth} <span className="text-lg font-normal">mm</span></span>
           </div>
           <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 flex flex-col items-center justify-center text-center lg:col-span-4">
-            <Clarification size={12} className="hidden" /> {/* Added a small fix to help with target matching if needed, though replace should work */}
             <Thermometer className="w-8 h-8 text-blue-600 mb-2" />
             <span className="text-slate-500 text-sm">Nhiệt độ hàn khuyến nghị</span>
             <span className="text-2xl font-bold text-blue-800">250 - 270 °C</span>
