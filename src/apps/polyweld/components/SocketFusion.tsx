@@ -67,10 +67,11 @@ const SocketFusion: React.FC = () => {
             <span className="text-3xl font-bold text-slate-800">{currentData.insertionDepth} <span className="text-lg font-normal">mm</span></span>
           </div>
           <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 flex flex-col items-center justify-center text-center lg:col-span-4">
+            <Clarification size={12} className="hidden" /> {/* Added a small fix to help with target matching if needed, though replace should work */}
             <Thermometer className="w-8 h-8 text-blue-600 mb-2" />
             <span className="text-slate-500 text-sm">Nhiệt độ hàn khuyến nghị</span>
-            <span className="text-2xl font-bold text-blue-800">200 - 230 °C</span>
-            <span className="text-xs text-blue-600 font-medium mt-1">Tối ưu: 210 - 220 °C (Đối với PPR: 260 °C)</span>
+            <span className="text-2xl font-bold text-blue-800">250 - 270 °C</span>
+            <span className="text-xs text-blue-600 font-medium mt-1">Tối ưu: 255 - 260 °C (Áp dụng cho cả PPR & HDPE)</span>
           </div>
         </div>
       </div>
@@ -96,7 +97,7 @@ const SocketFusion: React.FC = () => {
             </li>
             <li className="flex gap-2">
               <span className="font-bold text-blue-600">4.</span>
-              Kiểm tra nhiệt độ máy hàn (Thường là 260°C cho PPR; 200-230°C cho HDPE/các loại khác).
+              Kiểm tra nhiệt độ máy hàn (Khuyến nghị: 250 - 270°C cho cả PPR và HDPE).
             </li>
           </ul>
         </div>
