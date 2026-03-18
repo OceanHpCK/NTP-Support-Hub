@@ -1,12 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Calculator, Settings, Ruler, Mountain, Truck, Activity, CheckCircle2, XCircle, Info, Droplets, Table as TableIcon, X, AlertTriangle } from 'lucide-react';
 
-const MATERIALS = {
-  'HDPE (PE 100)': { E: 950, type: 'flexible', maxDeflection: 7.5, systems: ['water_supply', 'drainage'] },
-  'PVC-U': { E: 3200, type: 'flexible', maxDeflection: 7.5, systems: ['water_supply', 'drainage'] },
+const MATERIALS: Record<string, { E: number; type: string; maxDeflection: number; systems: string[]; sigma_d?: number }> = {
+  'HDPE (PE 100)': { E: 950, type: 'flexible', maxDeflection: 7.5, systems: ['water_supply', 'drainage'], sigma_d: 8.0 },
+  'PVC-U': { E: 3200, type: 'flexible', maxDeflection: 7.5, systems: ['water_supply', 'drainage'], sigma_d: 12.5 },
   'Ống gân sóng (Corrugated)': { E: 800, type: 'flexible', maxDeflection: 7.5, systems: ['drainage'] },
-  'Thép (Steel)': { E: 200000, type: 'flexible', maxDeflection: 3, systems: ['water_supply', 'drainage'] },
-  'Gang (Ductile Iron)': { E: 170000, type: 'semi-rigid', maxDeflection: 3, systems: ['water_supply', 'drainage'] },
+  'Thép (Steel)': { E: 200000, type: 'flexible', maxDeflection: 3, systems: ['water_supply', 'drainage'], sigma_d: 160 },
+  'Gang (Ductile Iron)': { E: 170000, type: 'semi-rigid', maxDeflection: 3, systems: ['water_supply', 'drainage'], sigma_d: 150 },
   'Bê tông (Concrete)': { E: 30000, type: 'rigid', maxDeflection: 0.1, systems: ['drainage'] }
 };
 
@@ -171,12 +171,21 @@ export default function App() {
     const Pcr_MPa = Math.sqrt(32 * Rw * B_prime * Eprime * EI / Math.pow(Dm, 3));
     const Pcr = Pcr_MPa * 1000;
     const FS_buckling = Pcr / Math.max(Pv, 0.001);
-    const hoopStress = (Pv * Dm) / (2 * actual_e * 1000);
-    const maxDef = MATERIALS[params.material as keyof typeof MATERIALS].maxDeflection;
-    const isDeflectionPass = deflectionPercent <= maxDef;
     const isBucklingPass = FS_buckling >= 2.0;
+
+    // Combined Stress Analysis (BS EN 1295-1)
+    const hoopStressPi = (Pi_MPa * Dm) / (2 * actual_e);
+    const bendingStress = (3 * E * actual_e * delta_x) / Math.pow(Dm, 2);
+    const combinedStress = hoopStressPi + bendingStress;
+    const isStressPass = MATERIALS[params.material].sigma_d ? combinedStress <= (MATERIALS[params.material].sigma_d || 0) : true;
+
+    const maxDef = MATERIALS[params.material].maxDeflection;
+    const isDeflectionPass = deflectionPercent <= maxDef;
+
     return {
-      Ps, Pt, Pv, delta_x, deflectionPercent, Pcr, FS_buckling, hoopStress, isDeflectionPass, isBucklingPass, maxDef
+      Ps, Pt, Pv, delta_x, deflectionPercent, Pcr, FS_buckling, 
+      hoopStressPi, bendingStress, combinedStress,
+      isDeflectionPass, isBucklingPass, isStressPass, maxDef
     };
   }, [params]);
 
@@ -485,6 +494,41 @@ export default function App() {
                     <div className="text-[10px] text-slate-500 text-right font-medium uppercase tracking-wider">Yêu cầu FS ≥ 2.0</div>
                   </div>
                 </div>
+
+                {/* Combined Stress Analysis Section */}
+                {params.systemType === 'water_supply' && (
+                  <div>
+                    <h3 className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-3">Phân tích ứng suất kết hợp (Stress)</h3>
+                    <div className="bg-slate-800/80 rounded-xl p-5 border border-slate-700/50 space-y-4">
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-slate-400">Ứng suất vòng (Hoop)</span>
+                        <span className="font-mono text-blue-300">{results.hoopStressPi.toFixed(2)} MPa</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-slate-400">Ứng suất uốn (Bending)</span>
+                        <span className="font-mono text-blue-300">{results.bendingStress.toFixed(2)} MPa</span>
+                      </div>
+                      <div className="pt-3 border-t border-slate-700">
+                        <div className="flex justify-between items-end mb-2">
+                          <div>
+                            <div className={`text-2xl font-mono ${results.isStressPass ? 'text-emerald-400' : 'text-rose-400'}`}>
+                              {results.combinedStress.toFixed(2)} MPa
+                            </div>
+                            {MATERIALS[params.material].sigma_d && (
+                              <div className="text-[10px] text-slate-500 mt-1 uppercase tracking-wider">
+                                Giới hạn cho phép: {MATERIALS[params.material].sigma_d} MPa
+                              </div>
+                            )}
+                          </div>
+                          <div className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${results.isStressPass ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`}>
+                            {results.isStressPass ? 'Đạt' : 'Vượt ngưỡng'}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
                 <div className="pt-4 border-t border-slate-800">
                   <p className="text-[10px] text-slate-500 leading-relaxed">
                     * Lưu ý: Kết quả tính toán mang tính chất tham khảo dựa trên phương pháp Spangler/Marston (phù hợp với nguyên lý BS EN 1295-1). Cần có kỹ sư chuyên môn kiểm tra lại trước khi áp dụng thực tế.
