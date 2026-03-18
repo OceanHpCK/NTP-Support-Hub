@@ -10,12 +10,20 @@ const MATERIALS: Record<string, { E: number; type: string; maxDeflection: number
   'Bê tông (Concrete)': { E: 30000, type: 'rigid', maxDeflection: 0.1, systems: ['drainage'] }
 };
 
-const BEDDING_CONSTANTS = {
+const BEDDING_CONSTANTS: Record<string, number> = {
   '0': 0.110,
   '60': 0.103,
   '90': 0.096,
   '120': 0.089,
   '180': 0.083
+};
+
+const BEDDING_DESCRIPTIONS: Record<string, string> = {
+  '0': 'Hỗ trợ điểm (Point support) - Thi công rất kém',
+  '60': 'Rãnh chữ V / Đệm hẹp (Narrow bedding)',
+  '90': 'Đệm tiêu chuẩn (Standard) - Phổ biến nhất',
+  '120': 'Đệm tạo hình và đầm nén kỹ (Compacted)',
+  '180': 'Lót nửa vòng ống (Full semi-circular) - Tốt nhất'
 };
 
 const getTrafficLoad = (traffic: string, H: number) => {
@@ -393,15 +401,26 @@ export default function App() {
                       </p>
                     </div>
                   )}
-                  <SelectField label="Góc ôm của lớp lót (Bedding Angle)" name="beddingAngle" value={params.beddingAngle} onChange={handleInputChange}
-                    options={[
-                      { label: '0° (Không lót)', value: '0' },
-                      { label: '60°', value: '60' },
-                      { label: '90°', value: '90' },
-                      { label: '120°', value: '120' },
-                      { label: '180° (Lót nửa ống)', value: '180' }
-                    ]}
-                  />
+                  <div className="space-y-2">
+                    <SelectField label="Góc ôm của lớp lót (Bedding Angle)" name="beddingAngle" value={params.beddingAngle} onChange={handleInputChange}
+                      options={[
+                        { label: '0°', value: '0' },
+                        { label: '60°', value: '60' },
+                        { label: '90° (Mặc định)', value: '90' },
+                        { label: '120°', value: '120' },
+                        { label: '180°', value: '180' }
+                      ]}
+                    />
+                    <div className="p-3 bg-blue-50/50 border border-blue-100 rounded-lg">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-[10px] font-bold text-blue-700 uppercase tracking-wider">Hệ số nền (K)</span>
+                        <span className="text-sm font-mono font-bold text-blue-600">{(BEDDING_CONSTANTS as any)[params.beddingAngle]}</span>
+                      </div>
+                      <p className="text-[10px] text-blue-800 leading-tight italic">
+                        {(BEDDING_DESCRIPTIONS as any)[params.beddingAngle]}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
