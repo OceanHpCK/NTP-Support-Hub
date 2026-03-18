@@ -251,23 +251,53 @@ export default function App() {
               <div>
                 <h3 className="text-lg font-semibold text-slate-800 mb-4">Table NA.1 Guide values of Spangler modulus for native soils (E'3)</h3>
                 <div className="overflow-x-auto">
+                    {/* ... existing table code ... */}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold text-slate-800 mb-4">Bedding Constant (K) vs Bedding Angle</h3>
+                <div className="overflow-x-auto">
                   <table className="w-full text-sm text-left border-collapse">
                     <thead>
                       <tr className="bg-slate-50">
-                        <th className="border p-2 font-medium">Soil type</th>
-                        <th className="border p-2 font-medium">Very dense</th>
-                        <th className="border p-2 font-medium">Dense</th>
-                        <th className="border p-2 font-medium">Medium dense</th>
-                        <th className="border p-2 font-medium">Loose</th>
-                        <th className="border p-2 font-medium">Very loose</th>
+                        <th className="border p-2 font-medium">Bedding Angle (&alpha;)</th>
+                        <th className="border p-2 font-medium">Description</th>
+                        <th className="border p-2 font-medium">K Value</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr><td className="border p-2 font-medium">Gravel</td><td className="border p-2">&gt; 40</td><td className="border p-2">15 - 40</td><td className="border p-2">9 - 15</td><td className="border p-2">5 - 9</td><td className="border p-2">3 - 5</td></tr>
-                      <tr><td className="border p-2 font-medium">Sand</td><td className="border p-2">15 - 20</td><td className="border p-2">9 - 15</td><td className="border p-2">4 - 9</td><td className="border p-2">2 - 4</td><td className="border p-2">1 - 2</td></tr>
+                      <tr>
+                        <td className="border p-2">0&deg;</td>
+                        <td className="border p-2 text-slate-600 italic">Point support (Very poor construction)</td>
+                        <td className="border p-2 font-mono font-bold">0.110</td>
+                      </tr>
+                      <tr>
+                        <td className="border p-2">60&deg;</td>
+                        <td className="border p-2 text-slate-600 italic">V-shaped trench / Narrow bedding</td>
+                        <td className="border p-2 font-mono font-bold">0.103</td>
+                      </tr>
+                      <tr>
+                        <td className="border p-2">90&deg;</td>
+                        <td className="border p-2 text-slate-600 italic">Standard bedding (Untamped)</td>
+                        <td className="border p-2 font-mono font-bold">0.096</td>
+                      </tr>
+                      <tr>
+                        <td className="border p-2">120&deg;</td>
+                        <td className="border p-2 text-slate-600 italic">Shaped and compacted bedding</td>
+                        <td className="border p-2 font-mono font-bold">0.089</td>
+                      </tr>
+                      <tr>
+                        <td className="border p-2">180&deg;</td>
+                        <td className="border p-2 text-slate-600 italic">Full semi-circular support (Best)</td>
+                        <td className="border p-2 font-mono font-bold">0.083</td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
+                <p className="mt-3 text-xs text-slate-500 leading-relaxed italic">
+                  * Lựa chọn: Góc 90&deg; là giá trị an toàn phổ biến. Góc 120&deg;-180&deg; yêu cầu thi công lớp đệm rất kỹ lưỡng theo đúng hình dạng đáy ống.
+                </p>
               </div>
             </div>
           </div>
@@ -628,6 +658,7 @@ export default function App() {
                     <div className="bg-slate-50 p-4 rounded-lg font-mono text-xs text-center border border-slate-100 shadow-inner">
                       &Delta;x = (K &times; W &times; r&sup3; &times; D_L) / (E&middot;I + 0.061 &times; E' &times; r&sup3;)
                     </div>
+                    <p className="text-xs text-slate-500 italic">Trong đó K là hệ số nền (Bedding Constant) phụ thuộc vào góc ôm của lớp lót.</p>
                   </section>
 
                   <section className="space-y-3">
