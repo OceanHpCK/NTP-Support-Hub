@@ -26,8 +26,9 @@ const PdfViewer: React.FC<PdfViewerProps> = ({ doc, onClose }) => {
           </div>
           <div>
             <h2 className="font-bold text-sm lg:text-base line-clamp-1">{doc.title}</h2>
-            <p className="text-[10px] text-white/50 uppercase tracking-widest font-semibold">
-              {doc.pipeType} • {doc.category === 'testing' ? 'Thử áp' : 'Lắp đặt'} • File: {doc.url.split('/').pop()}
+            <p className="text-[10px] text-white/50 tracking-widest font-semibold">
+              <span className="uppercase">{doc.pipeType} • {doc.category === 'testing' ? 'Thử áp' : 'Lắp đặt'}</span>
+              <span className="ml-2 opacity-70 italic font-mono lowercase">File: {doc.url.split('/').pop()}</span>
             </p>
           </div>
         </div>

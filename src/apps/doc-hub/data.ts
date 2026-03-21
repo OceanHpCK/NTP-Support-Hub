@@ -69,7 +69,7 @@ export const DOCUMENTS: Document[] = [
     category: 'installation',
     pipeType: 'PPR',
     description: 'Quy trình hàn nhiệt và bố trí giá đỡ cho hệ thống ống PP-R trong nhà.',
-    url: '/documents/instructions/install/install-ppr.pdf',
+    url: '/documents/instructions/install/install-ppr-tech.pdf',
     size: '1.8 MB',
     updatedAt: '2024-03-21',
   },
