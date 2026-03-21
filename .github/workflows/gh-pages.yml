@@ -28,6 +28,11 @@ jobs:
         env:
           VITE_GEMINI_API_KEY: ${{ secrets.VITE_GEMINI_API_KEY }}
 
+      - name: Copy documents to build
+        run: |
+          mkdir -p dist/documents
+          cp -rv document_technical/* dist/documents/
+
       - name: Setup 404 hack for SPA
         run: cp dist/index.html dist/404.html
 
