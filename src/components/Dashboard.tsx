@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import APP_REGISTRY from '../registry';
-import { ArrowRight, Drill, PipetteIcon, Flame, Calculator, Wrench, Cpu } from 'lucide-react';
+import { ArrowRight, Drill, PipetteIcon, Flame, Calculator, Wrench, Cpu, Book } from 'lucide-react';
 
 const ICON_MAP_LARGE: Record<string, React.ReactNode> = {
   drill: <Drill className="w-8 h-8" />,
@@ -10,6 +10,7 @@ const ICON_MAP_LARGE: Record<string, React.ReactNode> = {
   calculator: <Calculator className="w-8 h-8" />,
   wrench: <Wrench className="w-8 h-8" />,
   cpu: <Cpu className="w-8 h-8" />,
+  book: <Book className="w-8 h-8" />,
 };
 
 const Dashboard: React.FC = () => {

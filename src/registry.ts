@@ -16,7 +16,7 @@ export interface AppModule {
   name: string;
   shortName: string;
   description: string;
-  icon: 'drill' | 'pipe' | 'flame' | 'calculator' | 'wrench' | 'cpu' | 'anchor';
+  icon: 'drill' | 'pipe' | 'flame' | 'calculator' | 'wrench' | 'cpu' | 'anchor' | 'book';
   color: string;       // Tailwind color class prefix, e.g. 'green', 'blue', 'cyan'
   colorHex: string;    // Hex for gradient/dynamic use
   path: string;        // Route path (no leading /)
@@ -89,6 +89,17 @@ const APP_REGISTRY: AppModule[] = [
     colorHex: '#3b82f6',
     path: 'heat-loss-calculator',
     component: React.lazy(() => import('./apps/heat-loss-calculator/App')),
+  },
+  {
+    id: 'doc-hub',
+    name: 'Thư viện kỹ thuật',
+    shortName: 'Tài liệu',
+    description: 'Tra cứu & Tải về tài liệu hướng dẫn kỹ thuật, lắp đặt, thử áp cho các dòng ống Nhựa Tiền Phong.',
+    icon: 'book',
+    color: 'indigo',
+    colorHex: '#4f46e5',
+    path: 'manuals',
+    component: React.lazy(() => import('./apps/doc-hub/App')),
   },
 ];
 
