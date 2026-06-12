@@ -1,0 +1,5 @@
+{
+  "name": "HDPE Sinking Calculator",
+  "description": "Tính toán và xuất báo cáo PDF các thông số đánh chìm ống HDPE qua biển, sông.",
+  "requestFramePermissions": []
+}

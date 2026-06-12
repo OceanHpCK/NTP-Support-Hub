@@ -1,0 +1,5 @@
+{
+  "name": "Tien Phong Cement Calculator",
+  "description": "Calculate solvent cement usage for Tien Phong plastic pipes based on official specifications.",
+  "requestFramePermissions": []
+}

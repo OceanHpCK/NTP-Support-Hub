@@ -1,0 +1,81 @@
+generator client {
+  provider        = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Module {
+  id          String       @id
+  name        String
+  description String?
+  is_active   Boolean      @default(true)
+  is_public   Boolean      @default(false)
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+  accessCodes AccessCode[]
+
+  @@map("modules")
+}
+
+model AccessCode {
+  id               String     @id @default(uuid())
+  code             String     @unique
+  module_id        String
+  max_uses         Int        @default(1)
+  used_count       Int        @default(0)
+  duration_minutes Int        @default(60)
+  is_active        Boolean    @default(true)
+  created_at       DateTime   @default(now())
+  updated_at       DateTime   @updatedAt
+  
+  // Thông tin quản lý đơn vị và người sử dụng mã
+  company_name     String?
+  contact_name     String?
+  contact_phone    String?
+
+  module           Module     @relation(fields: [module_id], references: [id])
+  auditLogs        AuditLog[]
+
+  @@map("access_codes")
+}
+
+model AuditLog {
+  id             String     @id @default(uuid())
+  access_code_id String
+  ip_address     String?
+  user_agent     String?
+  accessed_at    DateTime   @default(now())
+  access_code    AccessCode @relation(fields: [access_code_id], references: [id])
+
+  @@map("audit_logs")
+}
+
+model Admin {
+  id         String   @id @default(uuid())
+  username   String   @unique
+  password   String   @db.Text
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("admins")
+}
+
+model TechnicalDocument {
+  id          String   @id @default(uuid())
+  title       String
+  category    String   // 'testing' | 'installation'
+  pipe_type   String   // 'HDPE' | 'PPR' | 'PVCU' | 'CORRUGATED' or custom values
+  description String?
+  file_name   String
+  file_size   String   @default("-")
+  is_active   Boolean  @default(true)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  @@map("technical_documents")
+}
+

@@ -1,0 +1,6 @@
+{
+  "name": "Water Hammer Calculator",
+  "description": "Tính toán áp suất Water Hammer và tư vấn thông số DN, PN cho hệ thống bơm.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

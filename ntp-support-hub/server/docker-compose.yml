@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: ntp_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: your_strong_password_here
+      POSTGRES_DB: ntp_support_hub
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: .
+    container_name: ntp_backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:your_strong_password_here@db:5432/ntp_support_hub?schema=public
+      - PORT=5000
+      - JWT_SECRET=YOUR_SUPER_SECRET_KEY_HERE
+      - ADMIN_USER=admin
+      - ADMIN_PASS=ntp_admin_123
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:

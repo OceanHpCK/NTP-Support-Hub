@@ -1,0 +1,37 @@
+# Quy tắc AI Workspace (Cursor & Claude Rules) - Tích hợp CodeGraph
+
+Không gian làm việc này được trang bị **CodeGraph** - một Bản đồ tri thức mã nguồn cục bộ (local codebase semantic knowledge graph) đặt tại thư mục gốc `.codegraph/`.
+
+## 🤖 Hướng dẫn dành cho Trợ lý AI (AI Instructions)
+
+1. **Khám phá mã nguồn bằng CodeGraph:**
+   - Thay vì chạy duyệt thư mục đệ quy hoặc thực hiện các lệnh tìm kiếm chuỗi văn bản (`grep`/`find`) gây tốn kém token và chậm chạp, hãy **luôn ưu tiên sử dụng cơ sở dữ liệu chỉ mục của CodeGraph**.
+   - Công cụ truy vấn cục bộ luôn khả dụng và hoạt động hoàn hảo trên môi trường Windows mà không phụ thuộc vào các lệnh Unix.
+
+2. **Cách truy vấn CodeGraph:**
+   - Sử dụng lệnh sau để tìm kiếm các ký hiệu (symbols), định nghĩa (definitions), lớp (classes), hàm (functions), hoặc route điều hướng:
+     ```bash
+     npx @colbymchenry/codegraph query "<từ_khóa_tìm_kiếm>"
+     ```
+   - Để kiểm tra cấu trúc thư mục từ chỉ mục:
+     ```bash
+     npx @colbymchenry/codegraph files
+     ```
+   - Để tạo ngữ cảnh nhanh cho một nhiệm vụ cụ thể:
+     ```bash
+     npx @colbymchenry/codegraph context "<mô_tả_nhiệm_vụ>"
+     ```
+   - Để xem số lượng tệp và cấu trúc chỉ mục hiện tại:
+     ```bash
+     npx @colbymchenry/codegraph status
+     ```
+
+3. **Cập nhật chỉ mục:**
+   - Sau khi thực hiện các thay đổi lớn về mã nguồn, hãy chạy lệnh đồng bộ nhanh để cập nhật SQLite database:
+     ```bash
+     npx @colbymchenry/codegraph sync
+     ```
+
+4. **Nguyên tắc Hoạt động:**
+   - Bảo mật 100% offline: Không bao giờ đẩy thư mục chỉ mục `.codegraph/` lên Git (đã được cấu hình chặn trong `.gitignore`).
+   - Mọi chỉnh sửa hoặc quyết định kỹ thuật đặc biệt phải được cập nhật vào tệp `implementation-notes.md` tại thư mục gốc để duy trì tính minh bạch cho nhà phát triển.

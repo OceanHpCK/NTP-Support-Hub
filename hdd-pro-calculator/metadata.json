@@ -1,0 +1,5 @@
+{
+  "name": "HDD Pro Calculator",
+  "description": "Ứng dụng tính toán khoan ngầm định hướng (HDD) cho ống HDPE. Bao gồm tính toán lực kéo, kiểm tra ứng suất, vẽ biểu đồ trắc dọc và phân tích an toàn bằng AI.",
+  "requestFramePermissions": []
+}

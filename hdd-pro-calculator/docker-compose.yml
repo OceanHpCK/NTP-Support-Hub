@@ -1,0 +1,29 @@
+services:
+  # Development mode (no volume mapping - better compatibility with Windows/Google Drive)
+  hdd-pro-calculator-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: hdd-pro-calculator-dev
+    ports:
+      - "3000:3000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    env_file:
+      - .env.local
+    profiles:
+      - dev
+
+  # Production mode
+  hdd-pro-calculator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: hdd-pro-calculator
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    profiles:
+      - prod

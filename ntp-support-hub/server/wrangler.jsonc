@@ -1,0 +1,30 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hotrokythuat",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-05-20",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "enable_nodejs_http_server_modules"
+  ],
+  "assets": {
+    "directory": "./public",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "hotrokythuat-db",
+      "database_id": "29bba027-76f5-4746-9ff3-0c6dfb4d5fe5"
+    }
+  ],
+  "triggers": {
+    "crons": []
+  },
+  "vars": {
+    "NODE_ENV": "production",
+    "CORS_ORIGINS": "",
+    "CF_WORKER": "true"
+  }
+}

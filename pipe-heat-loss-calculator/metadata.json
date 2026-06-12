@@ -1,0 +1,5 @@
+{
+  "name": "Pipe Heat Loss Calculator",
+  "description": "Calculate heat loss for HDPE and PP-R pipes with or without insulation.",
+  "requestFramePermissions": []
+}

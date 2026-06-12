@@ -1,0 +1,54 @@
+FROM node:22-bookworm-slim AS builder
+
+WORKDIR /app
+
+# Copy package.json files for all apps first to leverage caching
+COPY ntp-support-hub/package*.json ./ntp-support-hub/
+COPY hdd-pro-calculator/package*.json ./hdd-pro-calculator/
+COPY hdpe-sinking-calculator/package*.json ./hdpe-sinking-calculator/
+COPY pipe-heat-loss-calculator/package*.json ./pipe-heat-loss-calculator/
+COPY pipecalc-pro/package*.json ./pipecalc-pro/
+COPY polyweld-pro/package*.json ./polyweld-pro/
+COPY tien-phong-cement-calculator/package*.json ./tien-phong-cement-calculator/
+COPY water-hammer-calculator/package*.json ./water-hammer-calculator/
+
+# Install dependencies for all apps
+RUN cd ntp-support-hub && npm install
+RUN cd hdd-pro-calculator && npm install
+RUN cd hdpe-sinking-calculator && npm install
+RUN cd pipe-heat-loss-calculator && npm install
+RUN cd pipecalc-pro && npm install
+RUN cd polyweld-pro && npm install
+RUN cd tien-phong-cement-calculator && npm install
+RUN cd water-hammer-calculator && npm install
+
+# Copy source codes
+COPY . .
+
+# Build all apps
+RUN cd ntp-support-hub && npm run build
+RUN cd hdd-pro-calculator && npm run build
+RUN cd hdpe-sinking-calculator && npm run build
+RUN cd pipe-heat-loss-calculator && npm run build
+RUN cd pipecalc-pro && npm run build
+RUN cd polyweld-pro && npm run build
+RUN cd tien-phong-cement-calculator && npm run build
+RUN cd water-hammer-calculator && npm run build
+
+# Setup Nginx
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy build outputs to correct subdirectories
+COPY --from=builder /app/ntp-support-hub/dist /usr/share/nginx/html
+COPY --from=builder /app/ntp-support-hub/document_technical /usr/share/nginx/html/documents
+COPY --from=builder /app/hdd-pro-calculator/dist /usr/share/nginx/html/hdd-pro-calculator
+COPY --from=builder /app/hdpe-sinking-calculator/dist /usr/share/nginx/html/hdpe-sinking-calculator
+COPY --from=builder /app/pipe-heat-loss-calculator/dist /usr/share/nginx/html/pipe-heat-loss-calculator
+COPY --from=builder /app/pipecalc-pro/dist /usr/share/nginx/html/pipecalc-pro
+COPY --from=builder /app/polyweld-pro/dist /usr/share/nginx/html/polyweld-pro
+COPY --from=builder /app/tien-phong-cement-calculator/dist /usr/share/nginx/html/tien-phong-cement-calculator
+COPY --from=builder /app/water-hammer-calculator/dist /usr/share/nginx/html/water-hammer-calculator
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

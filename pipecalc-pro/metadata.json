@@ -1,0 +1,5 @@
+{
+  "name": "PipeCalc Pro",
+  "description": "Ứng dụng tính toán chôn lấp ống theo tiêu chuẩn BS EN 1295-1",
+  "requestFramePermissions": []
+}
