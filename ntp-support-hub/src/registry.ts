@@ -48,6 +48,17 @@ const APP_REGISTRY: AppModule[] = [
     component: React.lazy(() => import('./apps/pipecalc/App')),
   },
   {
+    id: 'pipe-stiffness',
+    name: 'Tính toán độ cứng vòng',
+    shortName: 'Độ cứng vòng',
+    description: 'Tính SN, chiều dày thành ống và khối lượng ống theo OD, SDR, E và Density dựa trên bảng Excel kỹ thuật.',
+    icon: 'calculator',
+    color: 'violet',
+    colorHex: '#7c3aed',
+    path: 'pipe-stiffness',
+    component: React.lazy(() => import('./apps/pipe-stiffness/App')),
+  },
+  {
     id: 'polyweld',
     name: 'PolyWeld Pro',
     shortName: 'PolyWeld',
