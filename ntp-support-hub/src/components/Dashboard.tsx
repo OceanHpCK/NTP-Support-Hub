@@ -2,17 +2,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import APP_REGISTRY from '../registry';
-import { ArrowRight, Drill, PipetteIcon, Flame, Calculator, Wrench, Cpu, Book, Anchor } from 'lucide-react';
+import { ArrowRight, Drill, PipetteIcon, Flame, Calculator, Wrench, Cpu, Book, Anchor, ShieldCheck } from 'lucide-react';
 
 const ICON_MAP_LARGE: Record<string, React.ReactNode> = {
-  drill: <Drill className="w-8 h-8" />,
-  pipe: <PipetteIcon className="w-8 h-8" />,
-  flame: <Flame className="w-8 h-8" />,
-  calculator: <Calculator className="w-8 h-8" />,
-  wrench: <Wrench className="w-8 h-8" />,
-  cpu: <Cpu className="w-8 h-8" />,
-  book: <Book className="w-8 h-8" />,
-  anchor: <Anchor className="w-8 h-8" />,
+  drill: <Drill className="w-7 h-7" />,
+  pipe: <PipetteIcon className="w-7 h-7" />,
+  flame: <Flame className="w-7 h-7" />,
+  calculator: <Calculator className="w-7 h-7" />,
+  wrench: <Wrench className="w-7 h-7" />,
+  cpu: <Cpu className="w-7 h-7" />,
+  book: <Book className="w-7 h-7" />,
+  anchor: <Anchor className="w-7 h-7" />,
 };
 
 interface DashboardProps {
@@ -23,82 +23,94 @@ const Dashboard: React.FC<DashboardProps> = ({ publicModuleIds = [] }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-full bg-gradient-to-br from-slate-50 via-white to-slate-100">
-      {/* Hero */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 via-transparent to-cyan-600/5" />
-        <div className="max-w-5xl mx-auto px-6 py-16 relative">
-          <div className="text-center space-y-5">
-            <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-700 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+    <div className="min-h-full bg-[linear-gradient(180deg,#f8fafc_0%,#ffffff_42%,#f1f5f9_100%)]">
+      <div className="mx-auto max-w-6xl px-5 py-10 md:px-8 md:py-14">
+        <section className="mb-10 grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+          <div className="space-y-5">
+            <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 px-3.5 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-blue-700 ring-1 ring-blue-100">
+              <ShieldCheck className="h-3.5 w-3.5" />
               NTP Technical Support Suite
             </div>
-            <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-              Bộ công cụ{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">
-                Hỗ trợ Kỹ thuật
-              </span>
-            </h1>
-            <p className="text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">
-              Các ứng dụng tính toán chuyên ngành dành cho khách hàng sử dụng sản phẩm Ống và Phụ tùng Nhựa Tiền Phong.
-              Chọn một công cụ bên dưới để bắt đầu.
-            </p>
+            <div className="space-y-3">
+              <h1 className="max-w-3xl text-4xl font-black tracking-tight text-slate-950 md:text-5xl">
+                Bộ công cụ hỗ trợ kỹ thuật cho hệ thống ống nhựa
+              </h1>
+              <p className="max-w-2xl text-base leading-7 text-slate-600 md:text-lg">
+                Tập hợp các công cụ tính toán, tra cứu và tư vấn kỹ thuật cho thiết kế, thi công và vận hành hệ thống ống HDPE, PPR.
+              </p>
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* App Cards Grid */}
-      <div className="max-w-5xl mx-auto px-6 pb-16 -mt-2">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {APP_REGISTRY.map((app, index) => (
-            <div
-              key={app.id}
-              onClick={() => navigate(`/${app.path}`)}
-              className="group relative bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-              style={{ animationDelay: `${index * 100}ms` }}
-            >
-              {/* Top accent bar */}
-              <div
-                className="h-1.5 w-full"
-                style={{ background: `linear-gradient(90deg, ${app.colorHex}, ${app.colorHex}99)` }}
-              />
-
-              <div className="p-6 space-y-4">
-                {/* Icon */}
-                <div
-                  className="w-14 h-14 rounded-xl flex items-center justify-center text-white shadow-lg transition-transform duration-300 group-hover:scale-110"
-                  style={{ background: `linear-gradient(135deg, ${app.colorHex}, ${app.colorHex}cc)` }}
-                >
-                  {ICON_MAP_LARGE[app.icon] || <Calculator className="w-8 h-8" />}
-                </div>
-
-                {/* Content */}
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <h3 className="text-xl font-bold text-slate-800">{app.name}</h3>
-                    {publicModuleIds.includes(app.id) && (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-100 text-emerald-700 uppercase tracking-wide">🔓 Public</span>
-                    )}
-                  </div>
-                  <p className="text-sm text-slate-500 leading-relaxed">{app.description}</p>
-                </div>
-
-                {/* Action */}
-                <div className="pt-2 flex items-center text-sm font-semibold" style={{ color: app.colorHex }}>
-                  Mở ứng dụng
-                  <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </div>
+          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm shadow-slate-200/70">
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">Tổng quan</p>
+            <div className="mt-4 grid grid-cols-3 gap-3">
+              <div className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-200">
+                <p className="text-2xl font-black text-slate-950">{APP_REGISTRY.length}</p>
+                <p className="text-xs font-medium text-slate-500">Module</p>
+              </div>
+              <div className="rounded-xl bg-blue-50 p-3 ring-1 ring-blue-100">
+                <p className="text-2xl font-black text-blue-700">ISO</p>
+                <p className="text-xs font-medium text-blue-700/70">Chuẩn kỹ thuật</p>
+              </div>
+              <div className="rounded-xl bg-emerald-50 p-3 ring-1 ring-emerald-100">
+                <p className="text-2xl font-black text-emerald-700">AI</p>
+                <p className="text-xs font-medium text-emerald-700/70">Trợ giúp</p>
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        </section>
 
-        {/* Info footer */}
-        <div className="mt-12 text-center">
-          <p className="text-xs text-slate-400">
-            Tất cả công cụ tính toán mang tính chất tham khảo. Cần tham khảo ý kiến kỹ sư chuyên ngành cho dự án thực tế.
-          </p>
-        </div>
+        <section>
+          <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h2 className="text-xl font-black tracking-tight text-slate-950">Chọn công cụ</h2>
+              <p className="mt-1 text-sm text-slate-500">Mỗi module được tối ưu cho một tác vụ kỹ thuật cụ thể.</p>
+            </div>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {APP_REGISTRY.map((app, index) => (
+              <button
+                key={app.id}
+                type="button"
+                onClick={() => navigate(`/${app.path}`)}
+                className="group relative flex min-h-[220px] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm shadow-slate-200/60 outline-none transition duration-200 hover:-translate-y-1 hover:border-slate-300 hover:shadow-xl hover:shadow-slate-200/80 focus:ring-4 focus:ring-blue-100"
+                style={{ animationDelay: `${index * 70}ms` }}
+              >
+                <div className="absolute inset-x-0 top-0 h-1" style={{ background: app.colorHex }} />
+                <div className="flex items-start justify-between gap-4">
+                  <div
+                    className="flex h-12 w-12 items-center justify-center rounded-xl text-white shadow-lg transition duration-200 group-hover:scale-105"
+                    style={{ background: `linear-gradient(135deg, ${app.colorHex}, ${app.colorHex}cc)` }}
+                  >
+                    {ICON_MAP_LARGE[app.icon] || <Calculator className="w-7 h-7" />}
+                  </div>
+                  {publicModuleIds.includes(app.id) && (
+                    <span className="rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-700 ring-1 ring-emerald-200">
+                      Public
+                    </span>
+                  )}
+                </div>
+
+                <div className="mt-5 flex-1">
+                  <h3 className="text-lg font-black tracking-tight text-slate-950">{app.name}</h3>
+                  <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-600">{app.description}</p>
+                </div>
+
+                <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4">
+                  <span className="text-sm font-bold" style={{ color: app.colorHex }}>Mở ứng dụng</span>
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-50 text-slate-500 transition group-hover:bg-slate-900 group-hover:text-white">
+                    <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
+                  </span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <p className="mt-10 text-center text-xs leading-5 text-slate-400">
+          Các công cụ tính toán mang tính chất tham khảo. Cần kiểm tra lại theo tiêu chuẩn, điều kiện công trình và hướng dẫn của nhà sản xuất trước khi áp dụng.
+        </p>
       </div>
     </div>
   );

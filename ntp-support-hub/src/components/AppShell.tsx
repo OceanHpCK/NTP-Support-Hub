@@ -11,11 +11,11 @@ const AppShell: React.FC<AppShellProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen bg-slate-100 overflow-hidden">
+    <div className="flex h-screen bg-slate-50 text-slate-900 overflow-hidden">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+          className="fixed inset-0 bg-slate-950/45 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
@@ -33,18 +33,19 @@ const AppShell: React.FC<AppShellProps> = ({ children }) => {
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Mobile header */}
-        <header className="lg:hidden bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between shrink-0">
+        <header className="lg:hidden bg-white/95 backdrop-blur border-b border-slate-200 px-4 py-3 flex items-center justify-between shrink-0 shadow-sm">
           <button
             onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-lg hover:bg-slate-100 text-slate-600"
+            className="p-2 rounded-xl text-slate-600 transition hover:bg-slate-100 focus:outline-none focus:ring-4 focus:ring-blue-100"
+            aria-label="Mở menu"
           >
             <Menu className="w-6 h-6" />
           </button>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-xl flex items-center justify-center shadow-sm shadow-blue-200">
               <span className="text-white font-bold text-sm">N</span>
             </div>
-            <span className="font-bold text-slate-800 text-sm">NTP Support Hub</span>
+            <span className="font-bold text-slate-900 text-sm">NTP Support Hub</span>
           </div>
           <div className="w-10" /> {/* Spacer */}
         </header>
