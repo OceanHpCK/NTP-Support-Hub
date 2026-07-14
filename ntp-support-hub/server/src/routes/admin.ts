@@ -194,15 +194,15 @@ router.get('/documents/file/:category/:fileName', async (req: Request, res: Resp
 router.use(authenticateAdmin);
 
 const REGISTRY_MODULES = [
-  { id: 'hdd-calculator', name: 'HDD Pro Calculator', description: 'Tính toán & Thiết kế khoan ngầm định hướng cho ống HDPE theo ASTM F1962.' },
-  { id: 'pipecalc', name: 'PipeCalc Pro', description: 'Tính toán chôn lấp ống theo tiêu chuẩn BS EN 1295-1 (Spangler/Marston).' },
-  { id: 'pipe-stiffness', name: 'Tính toán độ cứng vòng', description: 'Tính SN, chiều dày thành ống và khối lượng ống theo OD, SDR, E và Density dựa trên bảng Excel kỹ thuật.' },
-  { id: 'polyweld', name: 'PolyWeld Pro', description: 'Tra cứu quy trình & tính toán thông số hàn ống HDPE/PPR theo ISO 21307.' },
-  { id: 'hdpe-sinking', name: 'HDPE Sinking Calculator', description: 'Tính toán và xuất báo cáo các thông số đánh chìm ống HDPE qua biển, sông.' },
-  { id: 'cement-calculator', name: 'Tiền Phong Cement Calculator', description: 'Tính toán lượng keo dán ống Nhựa Tiền Phong dựa trên định mức tiêu chuẩn.' },
+  { id: 'hdd-calculator', name: 'Tính toán Khoan rút HDPE', description: 'Tính toán và thiết kế khoan rút/khoan ngầm định hướng cho ống HDPE theo ASTM F1962.' },
+  { id: 'pipecalc', name: 'Tính toán chôn lấp ống', description: 'Tính toán chôn lấp ống theo tiêu chuẩn BS EN 1295-1 (Spangler/Marston).' },
+  { id: 'pipe-stiffness', name: 'Độ cứng vòng', description: 'Tính SN, chiều dày thành ống và khối lượng ống theo OD, SDR, E và Density dựa trên bảng Excel kỹ thuật.' },
+  { id: 'polyweld', name: 'Thông số hàn nhiệt', description: 'Tra cứu quy trình và tính toán thông số hàn nhiệt ống HDPE/PPR theo ISO 21307.' },
+  { id: 'hdpe-sinking', name: 'Tính toán đánh chìm', description: 'Tính toán và xuất báo cáo các thông số đánh chìm ống HDPE qua biển, sông.' },
+  { id: 'cement-calculator', name: 'Tính toán lượng keo dán', description: 'Tính toán lượng keo dán ống Nhựa Tiền Phong dựa trên định mức tiêu chuẩn.' },
   { id: 'heat-loss-calculator', name: 'Tính toán tổn thất nhiệt', description: 'Tính toán tổn thất nhiệt cho đường ống nhựa HDPE & PP-R có/không bảo ôn.' },
-  { id: 'doc-hub', name: 'Thư viện kỹ thuật', description: 'Tra cứu & Tải về tài liệu hướng dẫn kỹ thuật, lắp đặt, thử áp cho các dòng ống Nhựa Tiền Phong.' },
-  { id: 'water-hammer-calculator', name: 'Water Hammer Calculator', description: 'Tính toán hiện tượng búa nước và áp lực nước tăng thêm trong đường ống.' },
+  { id: 'water-hammer-calculator', name: 'Tính toán Búa Nước', description: 'Tính toán hiện tượng búa nước và áp lực nước tăng thêm trong đường ống.' },
+  { id: 'doc-hub', name: 'Tài liệu kỹ thuật', description: 'Tra cứu và tải về tài liệu hướng dẫn kỹ thuật, lắp đặt, thử áp cho các dòng ống Nhựa Tiền Phong.' },
 ];
 
 router.get('/modules', async (_req: Request, res: Response): Promise<void> => {
