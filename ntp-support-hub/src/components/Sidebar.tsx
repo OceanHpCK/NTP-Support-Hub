@@ -90,10 +90,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
                 {ICON_MAP[app.icon] || <Calculator className="w-5 h-5" />}
               </div>
               <div className="min-w-0">
-                <p className="truncate">{app.shortName}</p>
-                {isActive && (
-                  <p className="text-[10px] text-emerald-700 truncate">{app.name}</p>
-                )}
+                <p className="line-clamp-2 leading-snug">{app.name}</p>
               </div>
             </NavLink>
           );
