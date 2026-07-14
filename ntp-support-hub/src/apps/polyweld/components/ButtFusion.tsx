@@ -416,42 +416,48 @@ const ButtFusion: React.FC = () => {
           </div>
 
           {result && (
-            <div className="rounded-2xl border border-slate-200 bg-slate-950 text-white shadow-xl shadow-slate-300/40 overflow-hidden">
-              <div className="flex flex-col gap-3 border-b border-white/10 bg-white/[0.03] p-5 sm:flex-row sm:items-center sm:justify-between">
-                <h3 className="flex items-center gap-2 text-lg font-black">
-                  <Info className="text-blue-300" /> Kết quả tính toán
+            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 shadow-sm shadow-slate-200/80">
+              <div className="flex flex-col gap-3 border-b border-slate-200 bg-white p-5 sm:flex-row sm:items-center sm:justify-between">
+                <h3 className="flex items-center gap-2 text-lg font-black text-slate-950">
+                  <Info className="text-blue-600" /> Kết quả tính toán
                 </h3>
                 <div className="flex flex-wrap gap-2 text-xs">
-                  <span className="rounded-full bg-blue-400/10 px-3 py-1 font-bold text-blue-100 ring-1 ring-blue-300/20">SDR {params.sdr}</span>
-                  <span className="rounded-full bg-emerald-400/10 px-3 py-1 font-bold text-emerald-100 ring-1 ring-emerald-300/20">T = {(params.pipeDiameter / params.sdr).toFixed(1)} mm</span>
+                  <span className="rounded-full bg-blue-50 px-3 py-1 font-bold text-blue-700 ring-1 ring-blue-100">SDR {params.sdr}</span>
+                  <span className="rounded-full bg-emerald-50 px-3 py-1 font-bold text-emerald-700 ring-1 ring-emerald-100">T = {(params.pipeDiameter / params.sdr).toFixed(1)} mm</span>
                 </div>
               </div>
 
-              <div className="grid gap-4 p-5 md:grid-cols-2 xl:grid-cols-6">
+              <div className="grid gap-3 p-5 sm:grid-cols-2 xl:grid-cols-4">
                 {metricCards.map((card) => {
                   const Icon = card.icon;
                   return (
-                    <div key={card.label} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-center">
-                      <div className="mb-3 flex flex-col items-center gap-2">
-                        <Icon className="h-5 w-5 text-slate-500" />
-                        <p className="text-xs font-bold uppercase tracking-wide text-slate-400">{card.label}</p>
+                    <div key={card.label} className="rounded-2xl border border-slate-200 bg-white p-4 text-center shadow-sm">
+                      <div className="mb-2 flex items-center justify-center gap-2">
+                        <Icon className="h-4 w-4 text-slate-400" />
+                        <p className="text-[11px] font-black uppercase tracking-wide text-slate-500">{card.label}</p>
                       </div>
                       <p className={`text-3xl font-black tracking-tight ${card.accent}`}>{card.value}</p>
-                      <p className="mt-1 text-xs font-semibold text-slate-400">{card.unit}</p>
+                      <p className="mt-1 text-xs font-bold text-slate-600">{card.unit}</p>
                       {card.note && (
-                        <p className="mx-auto mt-2 max-w-[13rem] text-[11px] font-medium leading-4 text-slate-500">{card.note}</p>
+                        <p className="mx-auto mt-2 max-w-[14rem] truncate text-[11px] font-medium text-slate-400" title={card.note}>{card.note}</p>
                       )}
                     </div>
                   );
                 })}
+              </div>
 
-                <div className="rounded-2xl border border-cyan-300/25 bg-gradient-to-br from-blue-700 via-blue-800 to-slate-950 p-4 text-center shadow-lg shadow-blue-950/30 md:col-span-2 xl:col-span-2">
-                  <div className="mb-3 flex items-center justify-center gap-2 text-cyan-100">
-                    <Thermometer size={16} className="shrink-0" />
-                    <p className="whitespace-nowrap text-xs font-black uppercase tracking-wide">Nhiệt độ hàn</p>
+              <div className="border-t border-slate-200 bg-gradient-to-r from-blue-50 via-cyan-50 to-white px-5 py-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm shadow-blue-200">
+                      <Thermometer size={18} />
+                    </div>
+                    <div>
+                      <p className="text-xs font-black uppercase tracking-wide text-blue-700">Nhiệt độ hàn</p>
+                      <p className="text-2xl font-black tracking-tight text-slate-950">200 - 230 °C</p>
+                    </div>
                   </div>
-                  <p className="whitespace-nowrap text-3xl font-black tracking-tight text-white">200 - 230 °C</p>
-                  <span className="mt-3 inline-flex w-fit items-center rounded-full bg-cyan-300/15 px-3 py-1.5 text-[11px] font-bold text-cyan-100 ring-1 ring-cyan-200/30">
+                  <span className="inline-flex w-fit items-center rounded-full bg-white px-3 py-1.5 text-xs font-bold text-blue-700 ring-1 ring-blue-200">
                     Tối ưu: 210 - 220 °C
                   </span>
                 </div>
