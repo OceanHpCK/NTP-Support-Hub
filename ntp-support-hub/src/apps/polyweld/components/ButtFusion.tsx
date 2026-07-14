@@ -188,10 +188,10 @@ const ButtFusion: React.FC = () => {
   }, [result]);
 
   const metricCards = result ? [
-    { label: 'P1, P3 (Hàn)', value: result.fusingPressure, unit: 'bar', accent: 'text-blue-600', icon: Gauge },
-    { label: 'P2 (Gia nhiệt)', value: result.heatSoakPressure, unit: 'bar', accent: 'text-amber-600', icon: Activity },
-    { label: 't2 (Gia nhiệt)', value: result.heatSoakTime, unit: 'giây', accent: 'text-orange-600', icon: Clock },
-    { label: 't5 (Làm nguội)', value: result.coolingTime, unit: 'phút', accent: 'text-emerald-600', icon: Clock },
+    { label: 'P1, P3 (Hàn)', value: result.fusingPressure, unit: 'bar', note: '', accent: 'text-blue-600', icon: Gauge },
+    { label: 'P2 (Gia nhiệt)', value: '> 0', unit: `≤ P_cản (${params.dragPressure} bar)`, note: 'Áp suất duy trì tiếp xúc, không vượt áp suất cản', accent: 'text-amber-600', icon: Activity },
+    { label: 't2 (Gia nhiệt)', value: result.heatSoakTime, unit: 'giây', note: '', accent: 'text-orange-600', icon: Clock },
+    { label: 't5 (Làm nguội)', value: result.coolingTime, unit: 'phút', note: `= ${(result.coolingTime * 60).toLocaleString('vi-VN')} giây`, accent: 'text-emerald-600', icon: Clock },
   ] : [];
 
   return (
@@ -431,13 +431,16 @@ const ButtFusion: React.FC = () => {
                 {metricCards.map((card) => {
                   const Icon = card.icon;
                   return (
-                    <div key={card.label} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
-                      <div className="mb-3 flex items-center justify-between">
+                    <div key={card.label} className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-center">
+                      <div className="mb-3 flex flex-col items-center gap-2">
+                        <Icon className="h-5 w-5 text-slate-500" />
                         <p className="text-xs font-bold uppercase tracking-wide text-slate-400">{card.label}</p>
-                        <Icon className="h-4 w-4 text-slate-500" />
                       </div>
                       <p className={`text-3xl font-black tracking-tight ${card.accent}`}>{card.value}</p>
-                      <p className="mt-1 text-xs font-semibold text-slate-500">{card.unit}</p>
+                      <p className="mt-1 text-xs font-semibold text-slate-400">{card.unit}</p>
+                      {card.note && (
+                        <p className="mx-auto mt-2 max-w-[13rem] text-[11px] font-medium leading-4 text-slate-500">{card.note}</p>
+                      )}
                     </div>
                   );
                 })}
@@ -470,10 +473,10 @@ const ButtFusion: React.FC = () => {
             <div className="grid gap-3">
               {[
                 { title: 't1. Tạo gờ (Bead-up)', desc: `Tăng áp suất lên P1 = ${result?.beadUpPressure} bar. Đợi đến khi gờ tiếp xúc đạt ${result?.beadHeight} mm.` },
-                { title: 't2. Gia nhiệt (Heat Soak)', desc: `Giảm nhanh áp suất về P2 = P_cản = ${params.dragPressure} bar. Duy trì ${result?.heatSoakTime} giây.` },
+                { title: 't2. Gia nhiệt (Heat Soak)', desc: `Giảm nhanh áp suất về P2 > 0 và P2 ≤ P_cản (${params.dragPressure} bar). Duy trì ${result?.heatSoakTime} giây.` },
                 { title: 't3. Chuyển đổi (Change-over)', desc: `Tách đĩa nhiệt tối đa ${result?.changeOverTime}s.` },
                 { title: 't4. Tăng áp (Ramp-up)', desc: `Tăng áp đều từ 0 lên P3 = ${result?.fusingPressure} bar.` },
-                { title: 't5. Làm nguội (Cooling)', desc: `Giữ nguyên áp suất P3 = ${result?.fusingPressure} bar trong ${result?.coolingTime} phút.` },
+                { title: 't5. Làm nguội (Cooling)', desc: `Giữ nguyên áp suất P3 = ${result?.fusingPressure} bar trong ${result?.coolingTime} phút (${((result?.coolingTime ?? 0) * 60).toLocaleString('vi-VN')} giây).` },
               ].map((step, idx) => (
                 <div key={step.title} className="flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4">
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-sm font-black text-blue-700 ring-1 ring-slate-200">
