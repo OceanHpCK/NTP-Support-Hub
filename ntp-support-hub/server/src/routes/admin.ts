@@ -196,6 +196,7 @@ router.use(authenticateAdmin);
 const REGISTRY_MODULES = [
   { id: 'hdd-calculator', name: 'HDD Pro Calculator', description: 'Tính toán & Thiết kế khoan ngầm định hướng cho ống HDPE theo ASTM F1962.' },
   { id: 'pipecalc', name: 'PipeCalc Pro', description: 'Tính toán chôn lấp ống theo tiêu chuẩn BS EN 1295-1 (Spangler/Marston).' },
+  { id: 'pipe-stiffness', name: 'Tính toán độ cứng vòng', description: 'Tính SN, chiều dày thành ống và khối lượng ống theo OD, SDR, E và Density dựa trên bảng Excel kỹ thuật.' },
   { id: 'polyweld', name: 'PolyWeld Pro', description: 'Tra cứu quy trình & tính toán thông số hàn ống HDPE/PPR theo ISO 21307.' },
   { id: 'hdpe-sinking', name: 'HDPE Sinking Calculator', description: 'Tính toán và xuất báo cáo các thông số đánh chìm ống HDPE qua biển, sông.' },
   { id: 'cement-calculator', name: 'Tiền Phong Cement Calculator', description: 'Tính toán lượng keo dán ống Nhựa Tiền Phong dựa trên định mức tiêu chuẩn.' },
