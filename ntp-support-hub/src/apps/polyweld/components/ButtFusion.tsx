@@ -427,7 +427,7 @@ const ButtFusion: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid gap-4 p-5 md:grid-cols-2 xl:grid-cols-5">
+              <div className="grid gap-4 p-5 md:grid-cols-2 xl:grid-cols-6">
                 {metricCards.map((card) => {
                   const Icon = card.icon;
                   return (
@@ -445,13 +445,13 @@ const ButtFusion: React.FC = () => {
                   );
                 })}
 
-                <div className="rounded-2xl border border-cyan-300/25 bg-gradient-to-br from-blue-700 via-blue-800 to-slate-950 p-4 shadow-lg shadow-blue-950/30 md:col-span-2 xl:col-span-1">
-                  <div className="mb-3 flex items-center gap-2 text-cyan-100">
-                    <Thermometer size={16} />
-                    <p className="text-xs font-black uppercase tracking-wide">Nhiệt độ hàn</p>
+                <div className="rounded-2xl border border-cyan-300/25 bg-gradient-to-br from-blue-700 via-blue-800 to-slate-950 p-4 text-center shadow-lg shadow-blue-950/30 md:col-span-2 xl:col-span-2">
+                  <div className="mb-3 flex items-center justify-center gap-2 text-cyan-100">
+                    <Thermometer size={16} className="shrink-0" />
+                    <p className="whitespace-nowrap text-xs font-black uppercase tracking-wide">Nhiệt độ hàn</p>
                   </div>
-                  <p className="text-3xl font-black tracking-tight text-white">200 - 230 °C</p>
-                  <span className="mt-3 inline-flex w-fit items-center rounded-full bg-cyan-300/15 px-2.5 py-1 text-[11px] font-bold text-cyan-100 ring-1 ring-cyan-200/30">
+                  <p className="whitespace-nowrap text-3xl font-black tracking-tight text-white">200 - 230 °C</p>
+                  <span className="mt-3 inline-flex w-fit items-center rounded-full bg-cyan-300/15 px-3 py-1.5 text-[11px] font-bold text-cyan-100 ring-1 ring-cyan-200/30">
                     Tối ưu: 210 - 220 °C
                   </span>
                 </div>
