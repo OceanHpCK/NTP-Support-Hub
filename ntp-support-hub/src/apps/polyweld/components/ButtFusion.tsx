@@ -45,10 +45,21 @@ const PN_MAP: Record<string, Record<number, number>> = {
   }
 };
 
+type ButtFusionMaterial = 'PE100' | 'PE80' | 'PP-R';
+
+const SURFACE_PRESSURE_RECOMMENDATIONS: Record<ButtFusionMaterial, number> = {
+  PE100: 0.15,
+  PE80: 0.15,
+  'PP-R': 0.10,
+};
+
+const getRecommendedSurfacePressure = (currentMaterial: ButtFusionMaterial) =>
+  SURFACE_PRESSURE_RECOMMENDATIONS[currentMaterial];
+
 const ButtFusion: React.FC = () => {
   // UI State
   const [inputMode, setInputMode] = useState<'SDR' | 'PN'>('SDR');
-  const [material, setMaterial] = useState<'PE100' | 'PE80' | 'PP-R'>('PE100');
+  const [material, setMaterial] = useState<ButtFusionMaterial>('PE100');
   const [selectedPN, setSelectedPN] = useState<number>(16);
 
   // Calculation Params
@@ -57,9 +68,19 @@ const ButtFusion: React.FC = () => {
     sdr: 11,
     dragPressure: 0, // Default changed to 0
     machineCylinderArea: 10,
+    surfacePressureNPerMm2: getRecommendedSurfacePressure('PE100'),
   });
 
   const [result, setResult] = useState<ButtFusionResult | null>(null);
+  const recommendedSurfacePressure = getRecommendedSurfacePressure(material);
+  const isSurfacePressureValid =
+    Number.isFinite(params.surfacePressureNPerMm2) && params.surfacePressureNPerMm2 > 0;
+  const showSurfacePressureWarning =
+    isSurfacePressureValid &&
+    Math.abs(params.surfacePressureNPerMm2 - recommendedSurfacePressure) > 0.0001;
+  const surfacePressureError = isSurfacePressureValid
+    ? ''
+    : 'Áp suất bề mặt phải là số lớn hơn 0.';
 
   // Sync PN selection to SDR
   useEffect(() => {
@@ -80,6 +101,10 @@ const ButtFusion: React.FC = () => {
   }, [inputMode, material, selectedPN]);
 
   const calculateParams = () => {
+    if (!isSurfacePressureValid) {
+      return;
+    }
+
     const outerDiameter = params.pipeDiameter;
     const thickness = outerDiameter / params.sdr;
     const innerDiameter = outerDiameter - 2 * thickness;
@@ -88,7 +113,7 @@ const ButtFusion: React.FC = () => {
     const areaWelding = (Math.PI * (Math.pow(outerDiameter/10, 2) - Math.pow(innerDiameter/10, 2))) / 4;
 
     // Interfacial Pressure
-    const interfacialPressure = material === 'PP-R' ? 1.0 : 1.5; // bar (0.10 N/mm2 for PP-R, 0.15 N/mm2 for PE)
+    const interfacialPressure = params.surfacePressureNPerMm2 * 10;
 
     // Theoretical Pressure
     const pressureTheory = (areaWelding * interfacialPressure) / params.machineCylinderArea;
@@ -150,7 +175,8 @@ const ButtFusion: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setParams(prev => ({ ...prev, [name]: Number(value) }));
+    const nextValue = value === '' ? Number.NaN : Number(value);
+    setParams(prev => ({ ...prev, [name]: nextValue }));
   };
 
   // Generate Graph Data (Schematic matching the user image)
@@ -230,7 +256,14 @@ const ButtFusion: React.FC = () => {
                 {['PE100', 'PE80', 'PP-R'].map((m) => (
                   <button
                     key={m}
-                    onClick={() => setMaterial(m as any)}
+                    onClick={() => {
+                      const nextMaterial = m as ButtFusionMaterial;
+                      setMaterial(nextMaterial);
+                      setParams(prev => ({
+                        ...prev,
+                        surfacePressureNPerMm2: getRecommendedSurfacePressure(nextMaterial),
+                      }));
+                    }}
                     className={`flex-1 py-2 px-3 border rounded text-sm font-medium transition ${
                       material === m 
                         ? 'bg-blue-600 text-white border-blue-600' 
@@ -283,6 +316,33 @@ const ButtFusion: React.FC = () => {
                     <option key={pn} value={pn}>PN {pn} (SDR {PN_MAP[material][pn]})</option>
                   ))}
                 </select>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1">
+                Áp suất bề mặt - N/mm²
+              </label>
+              <input
+                type="number"
+                name="surfacePressureNPerMm2"
+                value={Number.isNaN(params.surfacePressureNPerMm2) ? '' : params.surfacePressureNPerMm2}
+                onChange={handleInputChange}
+                step="0.01"
+                min="0.01"
+                className={`w-full p-2.5 border rounded-lg focus:ring-2 focus:outline-none font-mono text-lg ${
+                  surfacePressureError
+                    ? 'border-red-300 focus:ring-red-500'
+                    : 'border-slate-300 focus:ring-blue-500'
+                }`}
+              />
+              {surfacePressureError && (
+                <p className="mt-1 text-xs text-red-600">{surfacePressureError}</p>
+              )}
+              {showSurfacePressureWarning && (
+                <p className="mt-1 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1">
+                  Giá trị đã khác mức khuyến nghị cho vật liệu này. Hãy kiểm tra tiêu chuẩn và thông số nhà sản xuất trước khi hàn.
+                </p>
               )}
             </div>
 

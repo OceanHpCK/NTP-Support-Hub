@@ -26,6 +26,7 @@ export interface ButtFusionParams {
   sdr: number; // Standard Dimension Ratio
   dragPressure: number; // bar
   machineCylinderArea: number; // cm2 (Total effective piston area)
+  surfacePressureNPerMm2: number; // N/mm2
 }
 
 export interface ButtFusionResult {
