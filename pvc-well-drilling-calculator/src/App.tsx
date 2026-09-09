@@ -5,7 +5,7 @@ import {
   Disc
 } from 'lucide-react';
 
-// --- DATA: TCCS 03:2010/NTP Standards ---
+// --- DATA: BS EN ISO 1452 (PVC-U pressure pipes) ---
 const pvcStandards = [
   { od: 110, pns: [ {level: 6, e: 3.2}, {level: 8, e: 4.2}, {level: 10, e: 5.3}, {level: 12.5, e: 6.6}, {level: 16, e: 8.1}, {level: 25, e: 12.3} ] },
   { od: 125, pns: [ {level: 6, e: 3.7}, {level: 8, e: 4.8}, {level: 10, e: 6.0}, {level: 12.5, e: 7.4}, {level: 16, e: 9.2}, {level: 25, e: 14.0} ] },
@@ -261,7 +261,7 @@ export default function App() {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden lg:col-span-2">
               <div className="bg-indigo-50 px-6 py-4 border-b border-indigo-100 flex items-center space-x-2">
                 <Settings className="w-5 h-5 text-indigo-600" />
-                <h2 className="text-lg font-semibold text-indigo-900">Thông số Giếng & Chọn Ống PVC (TCCS 03:2010/NTP)</h2>
+                <h2 className="text-lg font-semibold text-indigo-900">Thông số Giếng & Chọn Ống PVC (BS EN ISO 1452)</h2>
               </div>
               <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
@@ -790,7 +790,7 @@ export default function App() {
               </div>
 
               <div>
-                <h3 className="font-bold text-lg text-gray-900 border-l-4 border-blue-500 pl-3">4. Dữ liệu Kích thước Ống PVC-U (Nguồn: TCCS 03:2010/NTP)</h3>
+                <h3 className="font-bold text-lg text-gray-900 border-l-4 border-blue-500 pl-3">4. Dữ liệu Kích thước Ống PVC-U (Nguồn: BS EN ISO 1452)</h3>
                 <p className="mt-2">Hệ thống đã mã hóa bảng thông số độ dày (e) tương ứng với cấp áp suất (PN) của nhựa Tiền Phong để hỗ trợ tính toán tự động:</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                   <div className="bg-slate-50 p-4 border border-slate-200 rounded">
