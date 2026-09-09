@@ -60,7 +60,11 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
     if (admin) {
       const isValid = await bcrypt.compare(password, admin.password);
       if (isValid) {
-        const secret = env.JWT_SECRET || 'NTP_SUPER_SECRET_KEY_2026_!@#';
+        const secret = env.JWT_SECRET;
+        if (!secret) {
+          res.status(500).json({ success: false, message: 'Server misconfigured: JWT_SECRET missing.' });
+          return;
+        }
         const token = jwt.sign({ role: 'admin' }, secret, { expiresIn: '1d' });
         res.json({ success: true, token });
         return;

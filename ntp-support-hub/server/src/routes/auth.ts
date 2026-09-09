@@ -50,7 +50,11 @@ router.post('/verify-code', async (req: Request, res: Response): Promise<void> =
       userAgent
     );
 
-    const secret = env.JWT_SECRET || 'NTP_SUPER_SECRET_KEY_2026_!@#';
+    const secret = env.JWT_SECRET;
+    if (!secret) {
+      res.status(500).json({ success: false, message: 'Server misconfigured: JWT_SECRET missing.' });
+      return;
+    }
     const expiresInSeconds = accessCode.duration_minutes * 60;
 
     const token = jwt.sign(

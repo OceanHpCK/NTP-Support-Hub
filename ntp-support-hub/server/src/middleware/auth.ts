@@ -21,7 +21,11 @@ export const authenticateAdmin = (req: Request, res: Response, next: NextFunctio
   }
 
   const token = authHeader.split(' ')[1];
-  const secret = env.JWT_SECRET || 'NTP_SUPER_SECRET_KEY_2026_!@#';
+  const secret = env.JWT_SECRET;
+  if (!secret) {
+    res.status(500).json({ success: false, message: 'Server misconfigured: JWT_SECRET missing.' });
+    return;
+  }
 
   try {
     const decoded = jwt.verify(token, secret) as any;
