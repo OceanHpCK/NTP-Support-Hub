@@ -54,3 +54,6 @@ temp/
 # Output build gộp cho Cloudflare (sinh bởi scripts/build-cloudflare.ps1)
 ntp-support-hub/server/public/
 
+
+# Wrangler build/cache
+.wrangler/
