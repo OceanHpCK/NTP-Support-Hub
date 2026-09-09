@@ -141,12 +141,6 @@ export default function App() {
     setCollapseDepth(val); // Tạm thời bằng nhau theo yêu cầu user
   };
 
-  // Auto-adjust SG based on Seal Type
-  useEffect(() => {
-    if (sealType === 'cement') setExtSg(1.8);
-    else setExtSg(1.25);
-  }, [sealType]);
-
   const currentPipe = pvcStandards.find(p => p.od === selectedOD)?.pns.find(p => p.level === selectedPN);
   const pvcThickness = currentPipe ? currentPipe.e : 1;
 
