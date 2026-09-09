@@ -42,6 +42,25 @@ const soilGeologyConfigs = [
   { id: 'clay_soft', label: 'Sét nhão / Bùn yếu', sg: 1.90, fs: 2.5, type: 'soft', minClearance: 70, maxClearance: 120, desc: 'Áp lực nén ngang rất lớn, kẹp ống.' },
 ];
 
+// Quy đổi cấp ống (level = PN theo σs=10 trong dữ liệu) sang SDR chuẩn và PN tham khảo theo
+// EN ISO 1452 (σs = 12,5 MPa, C = 2,0). SDR không phụ thuộc hệ số thiết kế nên dùng làm nhãn chính.
+const PN_SDR_MAP: Record<string, { sdr: number; pnRef: number }> = {
+  '6': { sdr: 33, pnRef: 8 },
+  '8': { sdr: 26, pnRef: 10 },
+  '10': { sdr: 21, pnRef: 12.5 },
+  '12.5': { sdr: 17, pnRef: 16 },
+  '16': { sdr: 13.6, pnRef: 20 },
+  '25': { sdr: 9, pnRef: 31.5 },
+};
+
+const pipeClass = (level: number): { sdr: number; pnRef: number } => {
+  const preset = PN_SDR_MAP[String(level)];
+  if (preset) return preset;
+  const sdr = Math.round((200 / level + 1) * 10) / 10;
+  const pnRef = Math.round((250 / (sdr - 1)) * 10) / 10;
+  return { sdr, pnRef };
+};
+
 // --- REUSABLE COMPONENTS ---
 const InputField = ({ label, value, onChange, unit, step = "1", hint }: any) => (
   <div className="mb-4">
@@ -275,18 +294,22 @@ export default function App() {
                     onChange={setSelectedOD} 
                     options={pvcStandards.map(p => ({ value: p.od, label: `DN ${p.od}` }))} 
                   />
-                  <SelectField 
-                    label="Áp suất danh định (PN)" 
-                    value={selectedPN} 
-                    onChange={setSelectedPN} 
-                    options={pvcStandards.find(p => p.od === selectedOD)?.pns.map(p => ({ value: p.level, label: `PN ${p.level}` })) || []} 
-                    hint={`Chiều dày thực tế: e = ${pvcThickness} mm`}
+                  <SelectField
+                    label="Cấp ống (SDR / PN)"
+                    value={selectedPN}
+                    onChange={setSelectedPN}
+                    options={pvcStandards.find(p => p.od === selectedOD)?.pns.map(p => {
+                      const c = pipeClass(p.level);
+                      return { value: p.level, label: `SDR ${c.sdr} — PN ${c.pnRef} (e ${p.e}mm)` };
+                    }) || []}
+                    hint={`PN tham khảo theo EN ISO 1452 (σs = 12,5 MPa). Chiều dày thực tế e = ${pvcThickness} mm`}
                   />
                 </div>
                 <div className="bg-gray-50 rounded-lg p-4 flex flex-col justify-center space-y-2 border border-gray-100">
                   <h3 className="font-semibold text-gray-700 border-b pb-2 mb-2">Đặc tính cơ học ống được chọn</h3>
                   <ResultRow label="Chiều dày thành ống (e)" value={pvcThickness} unit="mm" />
                   <ResultRow label="Tỷ lệ chuẩn (SDR)" value={SDR.toFixed(1)} unit="-" subtext="SDR = OD / e" />
+                  <ResultRow label="Áp suất danh định (PN)" value={pipeClass(selectedPN).pnRef} unit="bar" subtext="Tham khảo EN ISO 1452 (σs=12,5)" />
                   <ResultRow label="Áp suất chịu sập (Pc)" value={calculatedCollapseResistance.toFixed(2)} unit="bar" highlight={true} subtext="Lý thuyết theo Timoshenko" />
                 </div>
               </div>
@@ -735,8 +758,8 @@ export default function App() {
                   <h4 className="text-sm font-medium text-gray-700 mb-2">Sản phẩm PVC-U Tiền Phong khuyến nghị:</h4>
                   {recommendedPipe ? (
                     <div className="bg-emerald-100 text-emerald-800 p-4 rounded-md border border-emerald-300 font-bold text-center">
-                      Ống DN {revOD} - PN {recommendedPipe.level} <br/>
-                      <span className="text-sm font-normal">(Chiều dày thực tế: {recommendedPipe.e} mm)</span>
+                      Ống DN {revOD} — SDR {pipeClass(recommendedPipe.level).sdr} (PN {pipeClass(recommendedPipe.level).pnRef}) <br/>
+                      <span className="text-sm font-normal">(Chiều dày thực tế: {recommendedPipe.e} mm — PN tham khảo EN ISO 1452)</span>
                     </div>
                   ) : (
                     <div className="bg-red-100 text-red-800 p-4 rounded-md border border-red-300 font-bold text-center">
@@ -791,26 +814,26 @@ export default function App() {
 
               <div>
                 <h3 className="font-bold text-lg text-gray-900 border-l-4 border-blue-500 pl-3">4. Dữ liệu Kích thước Ống PVC-U (Nguồn: BS EN ISO 1452)</h3>
-                <p className="mt-2">Hệ thống đã mã hóa bảng thông số độ dày (e) tương ứng với cấp áp suất (PN) của nhựa Tiền Phong để hỗ trợ tính toán tự động:</p>
+                <p className="mt-2">Hệ thống mã hóa chiều dày (e) theo dãy SDR chuẩn; PN quy đổi tham khảo theo EN ISO 1452 (σs = 12,5 MPa, C = 2,0):</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
                   <div className="bg-slate-50 p-4 border border-slate-200 rounded">
                     <p className="font-bold border-b pb-1 mb-2">Ví dụ ống DN 110:</p>
                     <ul className="space-y-1 text-sm">
-                      <li>PN6 : e = 3.2 mm</li>
-                      <li>PN8 : e = 4.2 mm</li>
-                      <li>PN10: e = 5.3 mm</li>
-                      <li>PN12.5: e = 6.6 mm</li>
-                      <li>PN16: e = 8.1 mm</li>
+                      <li>SDR 33 (PN8) : e = 3.2 mm</li>
+                      <li>SDR 26 (PN10) : e = 4.2 mm</li>
+                      <li>SDR 21 (PN12.5) : e = 5.3 mm</li>
+                      <li>SDR 17 (PN16) : e = 6.6 mm</li>
+                      <li>SDR 13.6 (PN20) : e = 8.1 mm</li>
                     </ul>
                   </div>
                   <div className="bg-slate-50 p-4 border border-slate-200 rounded">
                     <p className="font-bold border-b pb-1 mb-2">Ví dụ ống DN 160:</p>
                     <ul className="space-y-1 text-sm">
-                      <li>PN6 : e = 4.7 mm</li>
-                      <li>PN8 : e = 6.2 mm</li>
-                      <li>PN10: e = 7.7 mm</li>
-                      <li>PN12.5: e = 9.5 mm</li>
-                      <li>PN16: e = 11.8 mm</li>
+                      <li>SDR 33 (PN8) : e = 4.7 mm</li>
+                      <li>SDR 26 (PN10) : e = 6.2 mm</li>
+                      <li>SDR 21 (PN12.5) : e = 7.7 mm</li>
+                      <li>SDR 17 (PN16) : e = 9.5 mm</li>
+                      <li>SDR 13.6 (PN20) : e = 11.8 mm</li>
                     </ul>
                   </div>
                 </div>
