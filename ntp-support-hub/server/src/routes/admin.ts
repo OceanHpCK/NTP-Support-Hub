@@ -202,6 +202,7 @@ const REGISTRY_MODULES = [
   { id: 'cement-calculator', name: 'Tính toán lượng keo dán', description: 'Tính toán lượng keo dán ống Nhựa Tiền Phong dựa trên định mức tiêu chuẩn.' },
   { id: 'heat-loss-calculator', name: 'Tính toán tổn thất nhiệt', description: 'Tính toán tổn thất nhiệt cho đường ống nhựa HDPE & PP-R có/không bảo ôn.' },
   { id: 'water-hammer-calculator', name: 'Tính toán Búa Nước', description: 'Tính toán hiện tượng búa nước và áp lực nước tăng thêm trong đường ống.' },
+  { id: 'pvc-well-drilling', name: 'Tính toán giếng khoan PVC', description: 'Tính toán gravel pack, cement grout và áp lực sập vỏ cho giếng khoan nước ống PVC.' },
   { id: 'doc-hub', name: 'Tài liệu kỹ thuật', description: 'Tra cứu và tải về tài liệu hướng dẫn kỹ thuật, lắp đặt, thử áp cho các dòng ống Nhựa Tiền Phong.' },
 ];
 

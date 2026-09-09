@@ -2,7 +2,7 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import APP_REGISTRY from '../registry';
-import { Home, Drill, PipetteIcon, Flame, Calculator, Wrench, Cpu, X, Anchor, Book } from 'lucide-react';
+import { Home, Drill, PipetteIcon, Flame, Calculator, Wrench, Cpu, X, Anchor, Book, Cylinder } from 'lucide-react';
 
 const ICON_MAP: Record<string, React.ReactNode> = {
   drill: <Drill className="w-5 h-5" />,
@@ -13,6 +13,7 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   cpu: <Cpu className="w-5 h-5" />,
   anchor: <Anchor className="w-5 h-5" />,
   book: <Book className="w-5 h-5" />,
+  cylinder: <Cylinder className="w-5 h-5" />,
 };
 
 interface SidebarProps {

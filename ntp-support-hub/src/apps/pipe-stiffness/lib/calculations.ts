@@ -3,7 +3,7 @@ import type { PipeMaterialPreset, PipeStiffnessInput, PipeStiffnessResult } from
 export const PI_FOR_EXCEL_MATCH = 3.142;
 
 export const PIPE_MATERIAL_PRESETS: PipeMaterialPreset[] = [
-  { id: 'upvc', material: 'uPVC', grade: 'N/A', youngModulusMpa: 3000, densityKgM3: 1460, mrsMpa: null },
+  { id: 'upvc', material: 'PVC-U', grade: 'N/A', youngModulusMpa: 3000, densityKgM3: 1460, mrsMpa: null },
   { id: 'pe80-md', material: 'PE80 (MD)', grade: 'ME3440', youngModulusMpa: 800, densityKgM3: 950, mrsMpa: null },
   { id: 'pe100', material: 'PE100', grade: 'HE3490-LS', youngModulusMpa: 1100, densityKgM3: 960, mrsMpa: 10 },
   { id: 'pp-b', material: 'PP-B', grade: 'BA415E', youngModulusMpa: 1500, densityKgM3: 900, mrsMpa: null },

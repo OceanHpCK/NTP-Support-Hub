@@ -17,7 +17,7 @@ export interface AppModule {
   name: string;
   shortName: string;
   description: string;
-  icon: 'drill' | 'pipe' | 'flame' | 'calculator' | 'wrench' | 'cpu' | 'anchor' | 'book';
+  icon: 'drill' | 'pipe' | 'flame' | 'calculator' | 'wrench' | 'cpu' | 'anchor' | 'book' | 'cylinder';
   color: string;       // Tailwind color class prefix, e.g. 'green', 'blue', 'cyan'
   colorHex: string;    // Hex for gradient/dynamic use
   path: string;        // Route path (no leading /)
@@ -51,7 +51,7 @@ const APP_REGISTRY: AppModule[] = [
     id: 'pipe-stiffness',
     name: 'Độ cứng vòng',
     shortName: 'Độ cứng vòng',
-    description: 'Tính SN, chiều dày thành ống và khối lượng ống theo OD, SDR, E và Density dựa trên bảng Excel kỹ thuật.',
+    description: 'Tính SN, chiều dày thành ống và khối lượng ống theo OD, SDR, mô đun đàn hồi E và khối lượng riêng.',
     icon: 'calculator',
     color: 'violet',
     colorHex: '#7c3aed',
@@ -112,6 +112,17 @@ const APP_REGISTRY: AppModule[] = [
     colorHex: '#14b8a6',
     path: 'water-hammer',
     component: React.lazy(() => import('./apps/water-hammer-calculator/App')),
+  },
+  {
+    id: 'pvc-well-drilling',
+    name: 'Tính toán giếng khoan PVC',
+    shortName: 'Giếng khoan PVC',
+    description: 'Tính toán gravel pack, cement grout và áp lực sập vỏ cho giếng khoan nước ống PVC.',
+    icon: 'cylinder',
+    color: 'amber',
+    colorHex: '#d97706',
+    path: 'pvc-well-drilling',
+    component: React.lazy(() => import('./apps/pvc-well-drilling/App')),
   },
   {
     id: 'doc-hub',

@@ -16,7 +16,8 @@ $apps = @(
     'pipecalc-pro',
     'polyweld-pro',
     'tien-phong-cement-calculator',
-    'water-hammer-calculator'
+    'water-hammer-calculator',
+    'pvc-well-drilling-calculator'
 )
 
 foreach ($app in $apps) {

@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import APP_REGISTRY from '../registry';
-import { ArrowRight, Drill, PipetteIcon, Flame, Calculator, Wrench, Cpu, Book, Anchor, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Drill, PipetteIcon, Flame, Calculator, Wrench, Cpu, Book, Anchor, ShieldCheck, Cylinder } from 'lucide-react';
 
 const ICON_MAP_LARGE: Record<string, React.ReactNode> = {
   drill: <Drill className="w-7 h-7" />,
@@ -13,6 +13,7 @@ const ICON_MAP_LARGE: Record<string, React.ReactNode> = {
   cpu: <Cpu className="w-7 h-7" />,
   book: <Book className="w-7 h-7" />,
   anchor: <Anchor className="w-7 h-7" />,
+  cylinder: <Cylinder className="w-7 h-7" />,
 };
 
 interface DashboardProps {

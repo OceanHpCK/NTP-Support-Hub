@@ -13,6 +13,20 @@ const inputClass =
 
 const labelClass = 'mb-2 block text-sm font-bold text-slate-700';
 
+const DN_OD_OPTIONS = [
+  { dn: 'DN20', od: 25 }, { dn: 'DN25', od: 32 }, { dn: 'DN32', od: 40 },
+  { dn: 'DN40', od: 50 }, { dn: 'DN50', od: 63 }, { dn: 'DN63', od: 75 },
+  { dn: 'DN75', od: 90 }, { dn: 'DN90', od: 110 }, { dn: 'DN110', od: 125 },
+  { dn: 'DN125', od: 140 }, { dn: 'DN140', od: 160 }, { dn: 'DN160', od: 180 },
+  { dn: 'DN200', od: 225 }, { dn: 'DN250', od: 280 }, { dn: 'DN300', od: 315 },
+  { dn: 'DN350', od: 355 }, { dn: 'DN400', od: 400 }, { dn: 'DN450', od: 450 },
+  { dn: 'DN500', od: 500 }, { dn: 'DN560', od: 560 }, { dn: 'DN630', od: 630 },
+  { dn: 'DN710', od: 710 }, { dn: 'DN800', od: 800 }, { dn: 'DN900', od: 900 },
+  { dn: 'DN1000', od: 1000 }, { dn: 'DN1200', od: 1200 },
+];
+
+const SDR_OPTIONS = [7.4, 9, 11, 13.6, 17, 17.6, 21, 26, 33, 41];
+
 const App: React.FC = () => {
   const [input, setInput] = useState<PipeStiffnessInput>(DEFAULT_PIPE_STIFFNESS_INPUT);
 
@@ -47,6 +61,9 @@ const App: React.FC = () => {
         preset.youngModulusMpa === input.youngModulusMpa &&
         preset.densityKgM3 === input.densityKgM3,
     )?.id ?? 'custom';
+
+  const [customOd, setCustomOd] = useState(false);
+  const [customSdr, setCustomSdr] = useState(false);
 
   const isValid =
     input.outsideDiameterMm > 0 &&
@@ -92,21 +109,21 @@ const App: React.FC = () => {
           <div>
             <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1 text-xs font-black uppercase tracking-wide text-blue-700 ring-1 ring-blue-100">
               <Sigma className="h-4 w-4" />
-              Pipe stiffness & weight
+              Pipe stiffness {'&'} weight
             </div>
             <h1 className="text-3xl font-black tracking-tight text-slate-950 md:text-4xl">
               Tính toán độ cứng vòng ống
             </h1>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-600">
-              Chuyển đổi bảng Excel “Pipe Stiffness & Weight Spreadsheet” thành công cụ tính nhanh SN,
-              chiều dày thành ống và khối lượng theo OD, SDR, mô đun đàn hồi E và khối lượng riêng.
+              Tính toán nhanh SN (độ cứng vòng), chiều dày thành ống và khối lượng theo OD, SDR,
+              mô đun đàn hồi E và khối lượng riêng vật liệu.
             </p>
           </div>
           <div className="rounded-2xl bg-slate-950 p-5 text-white">
             <p className="text-xs font-bold uppercase tracking-wide text-blue-200">Công thức chính</p>
             <p className="mt-3 text-2xl font-black">SN = E × I / Dav³ × 1000</p>
             <p className="mt-2 text-sm leading-6 text-slate-300">
-              Dùng π = 3.142 để khớp phương pháp tính trong file Excel gốc.
+              Trong đó: E = mô đun đàn hồi, I = moment quán tính, Dav = đường kính trung bình.
             </p>
           </div>
         </div>
@@ -120,7 +137,7 @@ const App: React.FC = () => {
             </div>
             <div>
               <h2 className="text-lg font-black text-slate-950">Thông số đầu vào</h2>
-              <p className="text-xs text-slate-500">Các ô màu vàng trong Excel</p>
+              <p className="text-xs text-slate-500">Chọn hoặc nhập trực tiếp</p>
             </div>
           </div>
 
@@ -137,15 +154,50 @@ const App: React.FC = () => {
               </select>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className={labelClass}>OD (mm)</label>
-                <input type="number" min="1" value={input.outsideDiameterMm} onChange={(event) => updateNumber('outsideDiameterMm', event.target.value)} className={inputClass} />
+            <div>
+              <div className="mb-2 flex items-center justify-between">
+                <label className="text-sm font-bold text-slate-700">OD (mm)</label>
+                <button type="button" onClick={() => setCustomOd(!customOd)} className="text-xs font-semibold text-blue-600 hover:text-blue-800 transition">
+                  {customOd ? '← Chọn từ danh sách' : 'Nhập tùy chỉnh →'}
+                </button>
               </div>
-              <div>
-                <label className={labelClass}>SDR</label>
-                <input type="number" min="1" step="0.1" value={input.sdr} onChange={(event) => updateNumber('sdr', event.target.value)} className={inputClass} />
+              {customOd ? (
+                <input type="number" min="1" value={input.outsideDiameterMm} onChange={(event) => updateNumber('outsideDiameterMm', event.target.value)} className={inputClass} placeholder="Nhập OD (mm)" />
+              ) : (
+                <select
+                  value={DN_OD_OPTIONS.find(o => o.od === input.outsideDiameterMm) ? input.outsideDiameterMm : ''}
+                  onChange={(event) => { updateNumber('outsideDiameterMm', event.target.value); }}
+                  className={inputClass}
+                >
+                  <option value="" disabled>Chọn DN / OD</option>
+                  {DN_OD_OPTIONS.map((opt) => (
+                    <option key={opt.od} value={opt.od}>{opt.dn} — OD {opt.od} mm</option>
+                  ))}
+                </select>
+              )}
+            </div>
+
+            <div>
+              <div className="mb-2 flex items-center justify-between">
+                <label className="text-sm font-bold text-slate-700">SDR</label>
+                <button type="button" onClick={() => setCustomSdr(!customSdr)} className="text-xs font-semibold text-blue-600 hover:text-blue-800 transition">
+                  {customSdr ? '← Chọn từ danh sách' : 'Nhập tùy chỉnh →'}
+                </button>
               </div>
+              {customSdr ? (
+                <input type="number" min="1" step="0.1" value={input.sdr} onChange={(event) => updateNumber('sdr', event.target.value)} className={inputClass} placeholder="Nhập SDR" />
+              ) : (
+                <select
+                  value={SDR_OPTIONS.includes(input.sdr) ? input.sdr : ''}
+                  onChange={(event) => { updateNumber('sdr', event.target.value); }}
+                  className={inputClass}
+                >
+                  <option value="" disabled>Chọn SDR</option>
+                  {SDR_OPTIONS.map((sdr) => (
+                    <option key={sdr} value={sdr}>SDR {sdr}</option>
+                  ))}
+                </select>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-3">
@@ -191,7 +243,7 @@ const App: React.FC = () => {
               </div>
               <div>
                 <h2 className="text-lg font-black text-slate-950">Chi tiết tính toán</h2>
-                <p className="text-xs text-slate-500">Theo cấu trúc cột trong file Excel</p>
+                <p className="text-xs text-slate-500">Kết quả trung gian</p>
               </div>
             </div>
 
@@ -216,7 +268,7 @@ const App: React.FC = () => {
             <div className="flex gap-3">
               <Layers className="mt-0.5 h-5 w-5 shrink-0 text-blue-700" />
               <p>
-                Ghi chú từ Excel: độ cứng vòng dài hạn thường khoảng 20% - 25% độ cứng vòng ngắn hạn.
+                Ghi chú: độ cứng vòng dài hạn thường khoảng 20% - 25% độ cứng vòng ngắn hạn.
                 Giá trị này chỉ là tham khảo kỹ thuật, không thay thế tiêu chuẩn thiết kế riêng của từng dự án.
               </p>
             </div>
