@@ -162,6 +162,9 @@ export default function App() {
   const gravelAnnulusVol = annularVol * Math.max(0, casingDepth - gravelTop) * safetyFactorGravel;
   const totalGravel = gravelUncasedVol + gravelAnnulusVol;
 
+  // Tránh chia cho 0 khi người dùng xoá trắng ô chiều sâu (chỉ dùng cho bản vẽ minh hoạ)
+  const schematicDepth = Math.max(1, totalDepth);
+
   const totalSealVol = annularVol * Math.max(0, sealBottom - sealTop); 
   const cementBags = totalSealVol / slurryPerBag;
   const totalWater = cementBags * waterPerBag;
@@ -517,15 +520,15 @@ export default function App() {
                       
                       {/* 1. Gravel Pack Primary at bottom */}
                       <div className="absolute bottom-0 w-full bg-[#E5C158] opacity-90 flex justify-center overflow-hidden" 
-                           style={{ height: `${((totalDepth - gravelTop) / totalDepth) * 100}%` }}>
+                           style={{ height: `${((schematicDepth - gravelTop) / schematicDepth) * 100}%` }}>
                         <div className="w-full h-full opacity-40" style={{ backgroundImage: 'radial-gradient(#8b4513 2px, transparent 2px)', backgroundSize: '12px 12px' }}></div>
                       </div>
 
                       {/* 2. Gravel Pack Secondary (Transition) */}
                       <div className="absolute w-full bg-[#fce68a] opacity-90 border-b border-yellow-600 flex justify-center overflow-hidden" 
                            style={{ 
-                             bottom: `${((totalDepth - gravelTop) / totalDepth) * 100}%`,
-                             height: `24px` 
+                             bottom: `${((schematicDepth - gravelTop) / schematicDepth) * 100}%`,
+                             height: `24px`
                            }}>
                         <div className="w-full h-full opacity-30" style={{ backgroundImage: 'radial-gradient(#8b4513 1px, transparent 1px)', backgroundSize: '8px 8px' }}></div>
                       </div>
@@ -533,8 +536,8 @@ export default function App() {
                       {/* 3. Seal Layer (Clay or Cement) */}
                       <div className="absolute w-full border-y border-stone-600/50"
                            style={{ 
-                             top: `${(sealTop / totalDepth) * 100}%`, 
-                             height: `${((sealBottom - sealTop) / totalDepth) * 100}%`,
+                             top: `${(sealTop / schematicDepth) * 100}%`,
+                             height: `${((sealBottom - sealTop) / schematicDepth) * 100}%`,
                              backgroundColor: sealType === 'cement' ? '#94a3b8' : '#b45309' 
                            }}>
                         {sealType === 'clay' && <div className="w-full h-full opacity-30" style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 4px, #451a03 4px, #451a03 5px)' }}></div>}
@@ -549,7 +552,7 @@ export default function App() {
 
                     {/* The PVC Casing (Ống vách, Ống lọc, Ống lắng) */}
                     <div className="absolute top-[10px] w-[56px] bg-blue-100/90 border-x-2 border-blue-600 flex flex-col items-center shadow-md z-20 rounded-b"
-                         style={{ height: `calc(30px + ${(casingDepth / totalDepth) * 520}px)` }}>
+                         style={{ height: `calc(30px + ${(casingDepth / schematicDepth) * 520}px)` }}>
                       
                       {/* Nắp & Khóa */}
                       <div className="absolute -top-[6px] w-[64px] h-[6px] bg-slate-800 rounded-t-sm">
@@ -620,7 +623,7 @@ export default function App() {
                     </div>
                     <h3 className="text-xl font-bold mb-2">Không khả thi / Khóa Phương án</h3>
                     <p className="text-red-700 max-w-md">
-                      Hệ số an toàn của ống hiện tại là <strong>{collapseSafety.toFixed(2)}</strong> (nhỏ hơn mức tối thiểu 2.0). 
+                      Hệ số an toàn của ống hiện tại là <strong>{collapseSafety.toFixed(2)}</strong> (nhỏ hơn mức tối thiểu {targetFS.toFixed(1)}).
                       Thiết kế này tiềm ẩn rủi ro cực cao về móp méo/sập ống trong quá trình thi công.
                     </p>
                     <div className="mt-6 text-sm text-left bg-white p-4 rounded border border-red-100 w-full max-w-md">
@@ -735,7 +738,7 @@ export default function App() {
                 <ResultRow label="Chiều dày ống tối thiểu (e)" value={reqE.toFixed(2)} unit="mm" highlight={true} subtext="Từ phương trình Timoshenko" />
                 
                 <div className="mt-4 pt-4 border-t border-emerald-200">
-                  <h4 className="text-sm font-medium text-gray-700 mb-2">Sản phẩm uPVC Tiền Phong khuyến nghị:</h4>
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">Sản phẩm PVC-U Tiền Phong khuyến nghị:</h4>
                   {recommendedPipe ? (
                     <div className="bg-emerald-100 text-emerald-800 p-4 rounded-md border border-emerald-300 font-bold text-center">
                       Ống DN {revOD} - PN {recommendedPipe.level} <br/>
@@ -764,7 +767,7 @@ export default function App() {
               
               <div>
                 <h3 className="font-bold text-lg text-gray-900 border-l-4 border-blue-500 pl-3">1. Phân biệt Áp suất danh định (PN) và Áp suất móp méo (Collapse)</h3>
-                <p className="mt-2 text-justify">Ống nhựa uPVC thường được phân loại theo cấp áp suất PN (Pressure Nominal), đánh giá khả năng chịu áp lực từ <strong>bên trong</strong> (Internal Burst Pressure) ra ngoài theo TCVN hoặc ISO. Tuy nhiên, rủi ro chính đối với ống chống giếng khoan lại là áp lực từ <strong>bên ngoài</strong> (External Collapse Pressure) do bùn nặng hoặc vữa xi măng ép vào thành ống, khiến ống bị sụp/móp méo.</p>
+                <p className="mt-2 text-justify">Ống nhựa PVC-U thường được phân loại theo cấp áp suất PN (Pressure Nominal), đánh giá khả năng chịu áp lực từ <strong>bên trong</strong> (Internal Burst Pressure) ra ngoài theo TCVN hoặc ISO. Tuy nhiên, rủi ro chính đối với ống chống giếng khoan lại là áp lực từ <strong>bên ngoài</strong> (External Collapse Pressure) do bùn nặng hoặc vữa xi măng ép vào thành ống, khiến ống bị sụp/móp méo.</p>
               </div>
 
               <div>
@@ -775,7 +778,7 @@ export default function App() {
                 </div>
                 <ul className="list-disc pl-8 space-y-1">
                   <li><strong>Pc</strong>: Áp suất sập lý thuyết (MPa, 1 MPa = 10 Bar)</li>
-                  <li><strong>E</strong>: Module đàn hồi (Modulus of Elasticity) của uPVC (Sử dụng 3000 MPa)</li>
+                  <li><strong>E</strong>: Module đàn hồi (Modulus of Elasticity) của PVC-U (Sử dụng 3000 MPa)</li>
                   <li><strong>ν</strong> (nu): Hệ số Poisson của nhựa PVC (0.38)</li>
                   <li><strong>OD</strong>: Đường kính ngoài của ống (mm)</li>
                   <li><strong>e</strong>: Chiều dày thành ống (mm)</li>
