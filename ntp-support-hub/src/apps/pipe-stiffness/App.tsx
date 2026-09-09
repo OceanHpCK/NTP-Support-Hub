@@ -13,17 +13,11 @@ const inputClass =
 
 const labelClass = 'mb-2 block text-sm font-bold text-slate-700';
 
+// Ống nhựa dùng hệ DN/OD (ISO 161-1 / EN ISO 6708): DN = đường kính ngoài danh nghĩa (mm).
 const DN_OD_OPTIONS = [
-  { dn: 'DN20', od: 25 }, { dn: 'DN25', od: 32 }, { dn: 'DN32', od: 40 },
-  { dn: 'DN40', od: 50 }, { dn: 'DN50', od: 63 }, { dn: 'DN63', od: 75 },
-  { dn: 'DN75', od: 90 }, { dn: 'DN90', od: 110 }, { dn: 'DN110', od: 125 },
-  { dn: 'DN125', od: 140 }, { dn: 'DN140', od: 160 }, { dn: 'DN160', od: 180 },
-  { dn: 'DN200', od: 225 }, { dn: 'DN250', od: 280 }, { dn: 'DN300', od: 315 },
-  { dn: 'DN350', od: 355 }, { dn: 'DN400', od: 400 }, { dn: 'DN450', od: 450 },
-  { dn: 'DN500', od: 500 }, { dn: 'DN560', od: 560 }, { dn: 'DN630', od: 630 },
-  { dn: 'DN710', od: 710 }, { dn: 'DN800', od: 800 }, { dn: 'DN900', od: 900 },
-  { dn: 'DN1000', od: 1000 }, { dn: 'DN1200', od: 1200 },
-];
+  16, 20, 25, 32, 40, 50, 63, 75, 90, 110, 125, 140, 160, 180, 200,
+  225, 250, 280, 315, 355, 400, 450, 500, 560, 630, 710, 800, 900, 1000, 1200,
+].map((od) => ({ dn: `DN${od}`, od }));
 
 const SDR_OPTIONS = [7.4, 9, 11, 13.6, 17, 17.6, 21, 26, 33, 41];
 
