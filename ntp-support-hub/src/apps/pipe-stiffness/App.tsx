@@ -5,6 +5,7 @@ import {
   DEFAULT_PIPE_STIFFNESS_INPUT,
   PIPE_MATERIAL_PRESETS,
   calculatePipeStiffness,
+  nominalPressureBar,
   formatNumber,
 } from './lib/calculations';
 
@@ -19,12 +20,16 @@ const DN_OD_OPTIONS = [
   225, 250, 280, 315, 355, 400, 450, 500, 560, 630, 710, 800, 900, 1000, 1200,
 ].map((od) => ({ dn: `DN${od}`, od }));
 
-const SDR_OPTIONS = [7.4, 9, 11, 13.6, 17, 17.6, 21, 26, 33, 41];
+const SDR_OPTIONS = [6, 7.4, 9, 11, 13.6, 17, 17.6, 21, 26, 33, 41];
 
 const App: React.FC = () => {
   const [input, setInput] = useState<PipeStiffnessInput>(DEFAULT_PIPE_STIFFNESS_INPUT);
 
   const result = useMemo(() => calculatePipeStiffness(input), [input]);
+  const pnBar = useMemo(
+    () => nominalPressureBar(input.mrsMpa, input.sdr, input.material),
+    [input.mrsMpa, input.sdr, input.material],
+  );
 
   const updateNumber = (field: keyof PipeStiffnessInput, value: string) => {
     const parsed = Number(value);
@@ -249,6 +254,7 @@ const App: React.FC = () => {
                 ['X-Area - Diện tích thành ống', `${formatNumber(result.crossSectionAreaM2, 6)} m²`],
                 ['Min. Weight', `${formatNumber(result.minimumWeightKgM, 3)} kg/m`],
                 ['Av. Weight', `${formatNumber(result.averageWeightKgM, 3)} kg/m`],
+                ['PN tham khảo', pnBar ? `≈ ${formatNumber(pnBar, 1)} bar` : 'Cần MRS (PE/PVC-U)'],
               ].map(([label, value]) => (
                 <div key={label} className="rounded-2xl border border-slate-100 bg-slate-50 p-4">
                   <p className="text-xs font-bold uppercase tracking-wide text-slate-500">{label}</p>
@@ -262,8 +268,12 @@ const App: React.FC = () => {
             <div className="flex gap-3">
               <Layers className="mt-0.5 h-5 w-5 shrink-0 text-blue-700" />
               <p>
-                Ghi chú: độ cứng vòng dài hạn thường khoảng 20% - 25% độ cứng vòng ngắn hạn.
-                Giá trị này chỉ là tham khảo kỹ thuật, không thay thế tiêu chuẩn thiết kế riêng của từng dự án.
+                Tiêu chuẩn áp dụng: <strong>HDPE — ISO 4427</strong>; <strong>PP-R — DIN 8077/8078</strong>;{' '}
+                <strong>PVC-U — BS EN ISO 1452</strong>. Dãy DN/OD theo ISO 161 (DN = đường kính ngoài).
+                PN tham khảo tính theo Barlow có hệ số thiết kế C (PE = 1,25; PVC-U = 2,0).
+                <br />
+                Độ cứng vòng dài hạn thường khoảng 20% - 25% độ cứng vòng ngắn hạn. Các giá trị chỉ mang
+                tính tham khảo kỹ thuật, không thay thế tiêu chuẩn thiết kế riêng của từng dự án.
               </p>
             </div>
           </div>
